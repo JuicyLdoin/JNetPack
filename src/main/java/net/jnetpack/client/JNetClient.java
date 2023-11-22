@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.exception.JNetClientAlreadyConnectedException;
 
 import java.net.InetSocketAddress;
 
@@ -49,6 +50,9 @@ public class JNetClient {
     }
 
     public void start() throws InterruptedException {
+
+        if (connected)
+            throw new JNetClientAlreadyConnectedException();
 
         Bootstrap bootstrap = new Bootstrap()
                 .group(workGroup)

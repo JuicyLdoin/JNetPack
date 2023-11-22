@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JNetServer {
@@ -18,6 +19,8 @@ public class JNetServer {
     final NioEventLoopGroup workGroup;
 
     Channel channel;
+
+    boolean connected;
 
     public JNetServer() {
 
@@ -33,9 +36,14 @@ public class JNetServer {
         connectionGroup = new NioEventLoopGroup(1);
         workGroup = new NioEventLoopGroup(threads);
 
+        connected = false;
+
     }
 
     public void start() throws InterruptedException {
+
+        if (connected)
+            throw new JNetServerAlreadyConnectedException();
 
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(connectionGroup, workGroup)
@@ -47,15 +55,21 @@ public class JNetServer {
                 .childOption(ChannelOption.SO_REUSEADDR, true);
 
         channel = bootstrap.bind(port).sync().channel();
+        connected = true;
 
     }
 
     public void stop() {
 
+        if (!connected)
+            return;
+
         channel.close();
 
         workGroup.shutdownGracefully();
         connectionGroup.shutdownGracefully();
+
+        connected = false;
 
     }
 }
