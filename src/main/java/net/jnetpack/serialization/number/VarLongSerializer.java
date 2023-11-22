@@ -1,10 +1,11 @@
-package net.jnetpack.serialization;
+package net.jnetpack.serialization.number;
 
 import io.netty.buffer.ByteBuf;
+import net.jnetpack.serialization.IJNetSerializer;
 
-public class VarIntSerializer implements IJNetSerializer<Integer> {
+public class VarLongSerializer implements IJNetSerializer<Long> {
 
-    public void serialize(Integer value, ByteBuf buf) {
+    public void serialize(Long value, ByteBuf buf) {
 
         do {
 
@@ -21,10 +22,10 @@ public class VarIntSerializer implements IJNetSerializer<Integer> {
 
     }
 
-    public Integer deserialize(ByteBuf buf) {
+    public Long deserialize(ByteBuf buf) {
 
         int numRead = 0;
-        int result = 0;
+        long result = 0;
 
         byte read;
 
@@ -32,13 +33,13 @@ public class VarIntSerializer implements IJNetSerializer<Integer> {
 
             read = buf.readByte();
 
-            int value = (read & 0b01111111);
+            long value = (read & 0b01111111);
             result |= (value << (7 * numRead));
 
             numRead++;
 
-            if (numRead > 5)
-                throw new RuntimeException("VarInt is too big");
+            if (numRead > 10)
+                throw new RuntimeException("VarLong is too big");
 
         } while ((read & 0b10000000) != 0);
 
