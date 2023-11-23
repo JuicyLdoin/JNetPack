@@ -12,6 +12,9 @@ import net.jnetpack.exception.JNetClientAlreadyConnectedException;
 
 import java.net.InetSocketAddress;
 
+/**
+ * JNetClient
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JNetClient {
 
@@ -24,14 +27,28 @@ public class JNetClient {
 
     boolean connected;
 
+    /**
+     * Default constructor
+     */
     public JNetClient() {
         this("localhost", 8080);
     }
 
+    /**
+     * Constructor with host
+     *
+     * @param host - host to which the client will be connected
+     */
     public JNetClient(String host) {
         this(host, 8080);
     }
 
+    /**
+     * Constructor with host and port
+     *
+     * @param host - host to which the client will be connected
+     * @param port - port to which the client will be connected
+     */
     public JNetClient(String host, int port) {
         this.host = host;
         this.port = port;
@@ -39,7 +56,13 @@ public class JNetClient {
         connected = false;
     }
 
-    public void start() throws InterruptedException {
+    /**
+     * Starts the client
+     *
+     * @throws JNetClientAlreadyConnectedException - client already connected
+     * @throws InterruptedException - interrupted
+     */
+    public void start() throws JNetClientAlreadyConnectedException, InterruptedException {
         if (connected)
             throw new JNetClientAlreadyConnectedException();
 
@@ -52,6 +75,9 @@ public class JNetClient {
         connected = true;
     }
 
+    /**
+     * Stops the client
+     */
     public void stop() {
         if (!connected)
             return;

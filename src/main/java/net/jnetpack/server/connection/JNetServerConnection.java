@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * JNetServerConnection class which sends and accepts JNet packets
+ */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JNetServerConnection extends Thread {
 
@@ -23,6 +26,13 @@ public class JNetServerConnection extends Thread {
     @Getter
     PacketRegistry packetRegistry;
 
+    /**
+     * JNetServerConnection constructor
+     *
+     * @param channel - netty channel context
+     * @param connectionName - JNet connection name
+     * @param packetRegistry - JNet packet registry
+     */
     public JNetServerConnection(@NotNull ChannelHandlerContext channel, String connectionName, PacketRegistry packetRegistry) {
         this.channel = channel;
         this.connectionName = connectionName;
@@ -30,10 +40,19 @@ public class JNetServerConnection extends Thread {
         this.packetRegistry = packetRegistry;
     }
 
+    /**
+     * Add packet or packet group to queue
+     *
+     * @param sender - sender which will be sent
+     */
     public void addToQueue(ISender sender) {
         queue.add(sender);
     }
 
+    /**
+     * Thread run implementation
+     * Send ISender from queue
+     */
     public void run() {
         while (channel.channel().isOpen()) {
             try {

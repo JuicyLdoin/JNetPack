@@ -3,6 +3,9 @@ package net.jnetpack.serialization.number;
 import io.netty.buffer.ByteBuf;
 import net.jnetpack.serialization.IJNetSerializer;
 
+/**
+ * Class for serializing and deserializing Long values in variable-length format which uses {@link IJNetSerializer}.
+ */
 public class VarLongSerializer implements IJNetSerializer<Long> {
 
     public void serialize(Long value, ByteBuf buf) {

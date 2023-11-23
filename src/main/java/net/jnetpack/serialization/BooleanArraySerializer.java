@@ -2,6 +2,9 @@ package net.jnetpack.serialization;
 
 import io.netty.buffer.ByteBuf;
 
+/**
+ * Class for serializing and deserializing Boolean arrays which uses {@link IJNetSerializer}.
+ */
 public class BooleanArraySerializer implements IJNetSerializer<Boolean[]> {
 
     public void serialize(Boolean[] values, ByteBuf buf) {

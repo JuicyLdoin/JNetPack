@@ -3,6 +3,9 @@ package net.jnetpack.serialization.number;
 import io.netty.buffer.ByteBuf;
 import net.jnetpack.serialization.IJNetSerializer;
 
+/**
+ * Class for serializing and deserializing Integer values in variable-length format which uses {@link IJNetSerializer}.
+ */
 public class VarIntSerializer implements IJNetSerializer<Integer> {
 
     public void serialize(Integer value, ByteBuf buf) {

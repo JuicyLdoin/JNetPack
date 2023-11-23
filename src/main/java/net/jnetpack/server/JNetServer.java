@@ -10,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 
+/**
+ * JNetServer
+ */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JNetServer {
 
@@ -22,10 +25,18 @@ public class JNetServer {
 
     boolean connected;
 
+    /**
+     * Default constructor
+     */
     public JNetServer() {
         this(8080);
     }
 
+    /**
+     * Constructor with port
+     *
+     * @param port the port number
+     */
     public JNetServer(int port) {
         this.port = port;
         int threads = 1;
@@ -34,7 +45,13 @@ public class JNetServer {
         connected = false;
     }
 
-    public void start() throws InterruptedException {
+    /**
+     * Starts the server
+     *
+     * @throws JNetServerAlreadyConnectedException - server already connected
+     * @throws InterruptedException - interrupted
+     */
+    public void start() throws JNetServerAlreadyConnectedException, InterruptedException {
         if (connected)
             throw new JNetServerAlreadyConnectedException();
 
@@ -50,6 +67,9 @@ public class JNetServer {
         connected = true;
     }
 
+    /**
+     * Stops the server
+     */
     public void stop() {
         if (!connected)
             return;
