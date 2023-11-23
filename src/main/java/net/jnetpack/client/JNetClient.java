@@ -25,32 +25,21 @@ public class JNetClient {
     boolean connected;
 
     public JNetClient() {
-
         this("localhost", 8080);
-
     }
 
     public JNetClient(String host) {
-
         this(host, 8080);
-
     }
 
     public JNetClient(String host, int port) {
-
         this.host = host;
         this.port = port;
-
-        int threads = 1;
-
-        workGroup = new NioEventLoopGroup(threads);
-
+        workGroup = new NioEventLoopGroup(1);
         connected = false;
-
     }
 
     public void start() throws InterruptedException {
-
         if (connected)
             throw new JNetClientAlreadyConnectedException();
 
@@ -59,22 +48,16 @@ public class JNetClient {
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-
         channel = bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();
         connected = true;
-
     }
 
     public void stop() {
-
         if (!connected)
             return;
 
         channel.close();
-
         workGroup.shutdownGracefully();
-
         connected = false;
-
     }
 }

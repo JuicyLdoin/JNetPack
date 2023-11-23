@@ -6,36 +6,26 @@ import net.jnetpack.serialization.IJNetSerializer;
 public class VarLongSerializer implements IJNetSerializer<Long> {
 
     public void serialize(Long value, ByteBuf buf) {
-
         do {
-
             byte temp = (byte) (value & 0b01111111);
-
             value >>>= 7;
 
             if (value != 0)
                 temp |= 0b10000000;
 
             buf.writeByte(temp);
-
         } while (value != 0);
-
     }
 
     public Long deserialize(ByteBuf buf) {
-
         int numRead = 0;
         long result = 0;
-
         byte read;
 
         do {
-
             read = buf.readByte();
-
             long value = (read & 0b01111111);
             result |= (value << (7 * numRead));
-
             numRead++;
 
             if (numRead > 10)
@@ -44,6 +34,5 @@ public class VarLongSerializer implements IJNetSerializer<Long> {
         } while ((read & 0b10000000) != 0);
 
         return result;
-
     }
 }

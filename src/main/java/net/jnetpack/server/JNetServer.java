@@ -23,25 +23,18 @@ public class JNetServer {
     boolean connected;
 
     public JNetServer() {
-
         this(8080);
-
     }
 
     public JNetServer(int port) {
-
         this.port = port;
         int threads = 1;
-
         connectionGroup = new NioEventLoopGroup(1);
         workGroup = new NioEventLoopGroup(threads);
-
         connected = false;
-
     }
 
     public void start() throws InterruptedException {
-
         if (connected)
             throw new JNetServerAlreadyConnectedException();
 
@@ -53,23 +46,17 @@ public class JNetServer {
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.SO_REUSEADDR, true);
-
         channel = bootstrap.bind(port).sync().channel();
         connected = true;
-
     }
 
     public void stop() {
-
         if (!connected)
             return;
 
         channel.close();
-
         workGroup.shutdownGracefully();
         connectionGroup.shutdownGracefully();
-
         connected = false;
-
     }
 }

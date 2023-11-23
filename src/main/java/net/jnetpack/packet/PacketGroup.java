@@ -17,40 +17,27 @@ public class PacketGroup implements ISender {
     PriorityQueue<Packet> queue;
 
     public PacketGroup() {
-
         this(PacketPriority.MEDIUM);
-
     }
 
     public PacketGroup(PacketPriority packetPriority) {
-
         this.packetPriority = packetPriority;
-
         queue = new PriorityQueue<>(Comparator.comparing(Packet::getPacketPriority));
-
     }
 
     public PacketGroup(PacketPriority packetPriority, Packet... packets) {
-
         this(packetPriority);
-
         queue.addAll(List.of(packets));
-
     }
 
     public PacketGroup add(Packet packet) {
-
         queue.add(packet);
         return this;
-
     }
 
     public void send(ByteBuf buf) {
-
         Packet packet;
-
         while ((packet = queue.poll()) != null)
             packet.send(buf);
-
     }
 }

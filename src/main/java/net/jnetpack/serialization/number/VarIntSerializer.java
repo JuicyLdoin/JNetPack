@@ -23,19 +23,14 @@ public class VarIntSerializer implements IJNetSerializer<Integer> {
     }
 
     public Integer deserialize(ByteBuf buf) {
-
         int numRead = 0;
         int result = 0;
-
         byte read;
 
         do {
-
             read = buf.readByte();
-
             int value = (read & 0b01111111);
             result |= (value << (7 * numRead));
-
             numRead++;
 
             if (numRead > 5)
@@ -44,6 +39,5 @@ public class VarIntSerializer implements IJNetSerializer<Integer> {
         } while ((read & 0b10000000) != 0);
 
         return result;
-
     }
 }

@@ -1,3 +1,4 @@
 package net.jnetpack.exception;
 
-public class JNetClientAlreadyConnectedException extends RuntimeException {}
+public class JNetClientAlreadyConnectedException extends RuntimeException {
+}
