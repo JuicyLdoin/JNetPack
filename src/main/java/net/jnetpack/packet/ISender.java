@@ -6,4 +6,6 @@ public interface ISender {
 
     void send(ByteBuf buf);
 
+    PacketPriority getPacketPriority();
+
 }

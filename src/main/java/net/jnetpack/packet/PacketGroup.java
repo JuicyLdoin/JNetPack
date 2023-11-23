@@ -2,6 +2,7 @@ package net.jnetpack.packet;
 
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Comparator;
@@ -11,17 +12,27 @@ import java.util.PriorityQueue;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PacketGroup implements ISender {
 
+    @Getter
+    PacketPriority packetPriority;
     PriorityQueue<Packet> queue;
 
     public PacketGroup() {
+
+        this(PacketPriority.MEDIUM);
+
+    }
+
+    public PacketGroup(PacketPriority packetPriority) {
+
+        this.packetPriority = packetPriority;
 
         queue = new PriorityQueue<>(Comparator.comparing(Packet::getPacketPriority));
 
     }
 
-    public PacketGroup(Packet... packets) {
+    public PacketGroup(PacketPriority packetPriority, Packet... packets) {
 
-        this();
+        this(packetPriority);
 
         queue.addAll(List.of(packets));
 
