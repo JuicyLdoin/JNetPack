@@ -35,7 +35,6 @@ public class JNetServerConnection extends Thread {
     }
 
     public void run() {
-
         while (channel.channel().isOpen()) {
             try {
                 ISender sender = queue.take();
