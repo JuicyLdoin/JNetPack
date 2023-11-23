@@ -60,7 +60,7 @@ public class JNetClient {
      * Starts the client
      *
      * @throws JNetClientAlreadyConnectedException - client already connected
-     * @throws InterruptedException - interrupted
+     * @throws InterruptedException                - interrupted
      */
     public void start() throws JNetClientAlreadyConnectedException, InterruptedException {
         if (connected)

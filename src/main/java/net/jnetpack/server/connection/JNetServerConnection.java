@@ -29,7 +29,7 @@ public class JNetServerConnection extends Thread {
     /**
      * JNetServerConnection constructor
      *
-     * @param channel - netty channel context
+     * @param channel        - netty channel context
      * @param connectionName - JNet connection name
      * @param packetRegistry - JNet packet registry
      */

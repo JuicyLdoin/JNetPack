@@ -40,7 +40,7 @@ public class PacketGroup implements ISender {
      * Constructor with {@link PacketPriority} and {@link Packet JNet packets} array
      *
      * @param packetPriority - the priority that will be used to send the group
-     * @param packets - array of {@link Packet JNet packets} which will be added instantly to queue
+     * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
      */
     public PacketGroup(PacketPriority packetPriority, Packet... packets) {
         this(packetPriority);

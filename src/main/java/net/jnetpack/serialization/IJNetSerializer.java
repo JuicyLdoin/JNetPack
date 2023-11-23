@@ -12,7 +12,7 @@ public interface IJNetSerializer<T> {
     /**
      * Serializes an object into a ByteBuf.
      *
-     * @param t the object to be serialized
+     * @param t   the object to be serialized
      * @param buf the ByteBuf to write to
      */
     void serialize(T t, ByteBuf buf);

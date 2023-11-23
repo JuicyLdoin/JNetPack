@@ -46,10 +46,10 @@ public class PacketRegistry {
      * @param id - packet id
      * @return - packet
      * @throws JNetPacketUnregisteredException - packet not registered
-     * @throws NoSuchMethodException - no such method
-     * @throws InvocationTargetException - invocation target
-     * @throws InstantiationException - instantiation
-     * @throws IllegalAccessException - illegal access
+     * @throws NoSuchMethodException           - no such method
+     * @throws InvocationTargetException       - invocation target
+     * @throws InstantiationException          - instantiation
+     * @throws IllegalAccessException          - illegal access
      */
     public Packet createPacket(byte id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
@@ -72,9 +72,9 @@ public class PacketRegistry {
     /**
      * Register a packet
      *
-     * @param id - packet id which will be registered
+     * @param id             - packet id which will be registered
      * @param packetPriority - packet priority which will be registered
-     * @param packet - packet class which will be registered
+     * @param packet         - packet class which will be registered
      */
     public void register(byte id, PacketPriority packetPriority, Class<? extends Packet> packet) {
         packetMap.put(id, packet);

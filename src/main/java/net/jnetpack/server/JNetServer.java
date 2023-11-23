@@ -49,7 +49,7 @@ public class JNetServer {
      * Starts the server
      *
      * @throws JNetServerAlreadyConnectedException - server already connected
-     * @throws InterruptedException - interrupted
+     * @throws InterruptedException                - interrupted
      */
     public void start() throws JNetServerAlreadyConnectedException, InterruptedException {
         if (connected)

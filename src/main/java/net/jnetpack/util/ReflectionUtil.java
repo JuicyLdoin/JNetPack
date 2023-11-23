@@ -12,8 +12,8 @@ public class ReflectionUtil {
     /**
      * Creates a Reflections object for a given package.
      *
-     * @param packageName the name of the package
-     * @return a Reflections object for the package
+     * @param packageName - name of the package
+     * @return - Reflections object for the package
      */
     private Reflections createReflections(@NotNull String packageName) {
         return new Reflections(packageName);
@@ -22,8 +22,8 @@ public class ReflectionUtil {
     /**
      * Creates instances of a list of classes.
      *
-     * @param classes the list of classes
-     * @return a list of instances of the classes
+     * @param classes - list of classes
+     * @return - list of instances of the classes
      */
     public <T> ImmutableList<T> createInstances(List<Class<? extends T>> classes) {
         return ImmutableList.copyOf(classes.stream()
@@ -40,9 +40,9 @@ public class ReflectionUtil {
     /**
      * Gets a list of classes in a package that implement a given class.
      *
-     * @param packageName the name of the package
-     * @param clazz the class
-     * @return a list of classes that implement the class
+     * @param packageName - name of the package
+     * @param clazz       - class
+     * @return - list of classes that implement the class
      */
     public <T> ImmutableList<Class<? extends T>> getClassesImplement(@NotNull String packageName, @NotNull Class<T> clazz) {
         return ImmutableList.copyOf(createReflections(packageName)
@@ -52,9 +52,9 @@ public class ReflectionUtil {
     /**
      * Gets a list of classes in a package that implement a given class.
      *
-     * @param packagE the package
-     * @param clazz the class
-     * @return a list of classes that implement the class
+     * @param packagE - package
+     * @param clazz   - class
+     * @return - list of classes that implement the class
      */
     public <T> ImmutableList<Class<? extends T>> getClassesImplement(@NotNull Package packagE, @NotNull Class<T> clazz) {
         return getClassesImplement(packagE.getName(), clazz);
@@ -63,8 +63,8 @@ public class ReflectionUtil {
     /**
      * Gets a list of classes in a package.
      *
-     * @param packageName the name of the package
-     * @return a list of classes in the package
+     * @param packageName - name of the package
+     * @return - list of classes in the package
      */
     public ImmutableList<Class<?>> getClassesInPackage(@NotNull String packageName) {
         return ImmutableList.copyOf(createReflections(packageName)
@@ -76,8 +76,8 @@ public class ReflectionUtil {
     /**
      * Gets a list of classes in a package.
      *
-     * @param packagE the package
-     * @return a list of classes in the package
+     * @param packagE - package
+     * @return - list of classes in the package
      */
     public ImmutableList<Class<?>> getClassesInPackage(@NotNull Package packagE) {
         return getClassesInPackage(packagE.getName());
@@ -86,10 +86,10 @@ public class ReflectionUtil {
     /**
      * Gets a class in a package by its name.
      *
-     * @param packageName the name of the package
-     * @param className the name of the class
-     * @return the class
-     * @throws ClassNotFoundException if the class is not found
+     * @param packageName - name of the package
+     * @param className   - name of the class
+     * @return - class
+     * @throws ClassNotFoundException - the class is not found
      */
     public Class<?> getClass(@NotNull String packageName, @NotNull String className) throws ClassNotFoundException {
         return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
