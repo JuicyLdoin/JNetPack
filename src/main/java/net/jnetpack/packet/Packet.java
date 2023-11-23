@@ -1,18 +1,16 @@
 package net.jnetpack.packet;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class Packet implements ISender {
 
-    final PacketPriority packetPriority;
+    byte id;
+    PacketPriority packetPriority;
 
-    protected Packet(PacketPriority packetPriority) {
-
-        this.packetPriority = packetPriority;
-
-    }
 }
