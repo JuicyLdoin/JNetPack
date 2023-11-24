@@ -1,6 +1,7 @@
-package net.jnetpack.packet;
+package net.jnetpack.packet.interfaces;
 
 import io.netty.buffer.ByteBuf;
+import net.jnetpack.packet.PacketPriority;
 
 /**
  * JNet sender

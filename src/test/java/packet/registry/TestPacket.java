@@ -16,4 +16,9 @@ public class TestPacket extends Packet {
     public void send(ByteBuf buf) {
 
     }
+
+    @Override
+    public void read(ByteBuf buf) {
+
+    }
 }

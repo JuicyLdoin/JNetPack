@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.packet.interfaces.ISender;
 
 import java.util.Comparator;
 import java.util.List;
