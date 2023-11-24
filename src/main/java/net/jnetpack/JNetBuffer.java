@@ -5,6 +5,12 @@ import io.netty.buffer.ByteBufUtil;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * JNetBuffer
+ * Took bitwise operations from the ChatGPT because I didn't learn them :)
+ *
+ * @param buf - {@link ByteBuf netty ByteBuf}
+ */
 public record JNetBuffer(ByteBuf buf) {
 
     public byte readByte() {

@@ -1,6 +1,5 @@
 package packet.registry;
 
-import io.netty.buffer.ByteBuf;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketPriority;
