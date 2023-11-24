@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import net.jnetpack.packet.ISender;
+import net.jnetpack.packet.interfaces.ISender;
 import net.jnetpack.packet.registry.PacketRegistry;
 import org.jetbrains.annotations.NotNull;
 
