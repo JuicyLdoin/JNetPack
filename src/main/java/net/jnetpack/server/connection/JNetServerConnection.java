@@ -4,7 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import net.jnetpack.packet.interfaces.ISender;
+import net.jnetpack.packet.Packet;
+import net.jnetpack.packet.interfaces.IWriter;
 import net.jnetpack.packet.registry.PacketRegistry;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,7 @@ public class JNetServerConnection extends Thread {
 
     @Getter
     String connectionName;
-    PriorityBlockingQueue<ISender> queue;
+    PriorityBlockingQueue<IWriter> queue;
 
     @Getter
     PacketRegistry packetRegistry;
@@ -36,28 +37,33 @@ public class JNetServerConnection extends Thread {
     public JNetServerConnection(@NotNull ChannelHandlerContext channel, String connectionName, PacketRegistry packetRegistry) {
         this.channel = channel;
         this.connectionName = connectionName;
-        queue = new PriorityBlockingQueue<>(50, Comparator.comparing(ISender::getPacketPriority));
+        queue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> {
+            if (writer instanceof Packet packet) {
+                return packetRegistry.getPriority(packet.getClass()).ordinal();
+            }
+            return 1;
+        }));
         this.packetRegistry = packetRegistry;
     }
 
     /**
      * Add packet or packet group to queue
      *
-     * @param sender - sender which will be sent
+     * @param writer - sender which will be sent
      */
-    public void addToQueue(ISender sender) {
-        queue.add(sender);
+    public void addToQueue(IWriter writer) {
+        queue.add(writer);
     }
 
     /**
      * Thread run implementation
-     * Send ISender from queue
+     * Send IWriter from queue
      */
     public void run() {
         while (channel.channel().isOpen()) {
             try {
-                ISender sender = queue.take();
-                sender.send(channel.alloc().buffer());
+                IWriter writer = queue.take();
+                writer.write(channel.alloc().buffer());
                 channel.flush();
             } catch (Exception exception) {
                 // TODO

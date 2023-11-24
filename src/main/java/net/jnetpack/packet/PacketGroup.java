@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import net.jnetpack.packet.interfaces.ISender;
+import net.jnetpack.packet.interfaces.IWriter;
 import net.jnetpack.packet.registry.PacketRegistry;
 
 import java.util.Comparator;
@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  * Group of {@link Packet JNet packets} which will be sent it all at a time
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class PacketGroup implements ISender {
+public class PacketGroup implements IWriter {
 
     @Getter
     PacketPriority packetPriority;
@@ -67,9 +67,9 @@ public class PacketGroup implements ISender {
      *
      * @param buf - netty {@link ByteBuf}
      */
-    public void send(ByteBuf buf) {
+    public void write(ByteBuf buf) {
         Packet packet;
         while ((packet = queue.poll()) != null)
-            packet.send(buf);
+            packet.write(buf);
     }
 }

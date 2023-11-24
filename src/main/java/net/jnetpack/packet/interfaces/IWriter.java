@@ -3,14 +3,14 @@ package net.jnetpack.packet.interfaces;
 import io.netty.buffer.ByteBuf;
 
 /**
- * JNet sender
+ * JNet writer
  */
-public interface ISender {
+public interface IWriter {
 
     /**
      * Write a self to {@link ByteBuf netty ByteBuf}
      *
-     * @param buf - {@link ByteBuf netty ByteBuf} in which sender will be written
+     * @param buf - {@link ByteBuf netty ByteBuf} in which writer will be written
      */
-    void send(ByteBuf buf);
+    void write(ByteBuf buf);
 }

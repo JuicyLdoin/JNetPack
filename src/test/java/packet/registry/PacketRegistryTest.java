@@ -10,6 +10,6 @@ public class PacketRegistryTest {
     @Test
     public void test() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         PacketRegistry packetRegistry = new PacketRegistry("packet.registry");
-        System.out.println(packetRegistry.createPacket((byte) 0).getPacketPriority().name());
+        System.out.println(packetRegistry.createPacket((byte) 0).getClass().getName());
     }
 }

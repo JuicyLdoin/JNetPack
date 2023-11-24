@@ -87,6 +87,17 @@ public class PacketRegistry {
     }
 
     /**
+     * Gets a packet id from packet class
+     *
+     * @param clazz - packet class
+     * @return - packet id
+     * @throws JNetPacketUnregisteredException - if packet isn`t registered
+     */
+    public PacketPriority getPriority(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
+        return priorityMap.get(getId(clazz));
+    }
+
+    /**
      * Register a packet
      *
      * @param id             - packet id which will be registered
