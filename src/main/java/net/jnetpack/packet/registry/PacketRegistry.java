@@ -1,6 +1,7 @@
 package net.jnetpack.packet.registry;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
@@ -18,9 +19,10 @@ import java.util.Map;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PacketRegistry {
 
-    Map<Class<? extends Packet>, Byte> idPacketMap;
-    Map<Byte, Class<? extends Packet>> packetMap;
-    Map<Byte, PacketPriority> priorityMap;
+    @Getter
+    Map<Class<? extends Packet>, Integer> idPacketMap;
+    Map<Integer, Class<? extends Packet>> packetMap;
+    Map<Integer, PacketPriority> priorityMap;
 
     /**
      * Default constructor
@@ -53,9 +55,9 @@ public class PacketRegistry {
      * @throws InstantiationException          - instantiation
      * @throws IllegalAccessException          - illegal access
      */
-    public Packet createPacket(byte id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
+    public Packet createPacket(int id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        return get(id).getConstructor(Byte.class, PacketPriority.class).newInstance(id, priorityMap.getOrDefault(id, PacketPriority.MEDIUM));
+        return get(id).getConstructor().newInstance();
     }
 
     /**
@@ -65,7 +67,7 @@ public class PacketRegistry {
      * @return - packet class
      * @throws JNetPacketUnregisteredException - if packet isn`t registered
      */
-    protected Class<? extends Packet> get(byte id) throws JNetPacketUnregisteredException {
+    protected Class<? extends Packet> get(int id) throws JNetPacketUnregisteredException {
         if (!packetMap.containsKey(id))
             throw new JNetPacketUnregisteredException();
 
@@ -79,7 +81,7 @@ public class PacketRegistry {
      * @return - packet id
      * @throws JNetPacketUnregisteredException - if packet isn`t registered
      */
-    public byte getId(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
+    public int getId(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
         if (!idPacketMap.containsKey(clazz))
             throw new JNetPacketUnregisteredException();
 
@@ -104,7 +106,7 @@ public class PacketRegistry {
      * @param packetPriority - packet priority which will be registered
      * @param packet         - packet class which will be registered
      */
-    public void register(byte id, PacketPriority packetPriority, Class<? extends Packet> packet) {
+    public void register(int id, PacketPriority packetPriority, Class<? extends Packet> packet) {
         idPacketMap.put(packet, id);
         packetMap.put(id, packet);
         priorityMap.put(id, packetPriority);
@@ -115,9 +117,18 @@ public class PacketRegistry {
      *
      * @param id - packet id which will be unregistered
      */
-    public void unregister(byte id) {
+    public void unregister(int id) {
         idPacketMap.remove(get(id));
         packetMap.remove(id);
         priorityMap.remove(id);
+    }
+
+    /**
+     * Unregister all packets
+     */
+    public void clear() {
+        idPacketMap.clear();
+        packetMap.clear();
+        priorityMap.clear();
     }
 }

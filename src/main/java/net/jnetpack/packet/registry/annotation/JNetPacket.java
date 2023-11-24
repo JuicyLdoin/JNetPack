@@ -16,7 +16,7 @@ public @interface JNetPacket {
      *
      * @return - packet id
      */
-    byte id();
+    int id();
 
     /**
      * Packet send priority
