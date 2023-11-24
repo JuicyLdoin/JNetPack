@@ -35,16 +35,17 @@ public class JNetServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
 
-            if (packet instanceof ConnectPacket connectPacket) {
-                packet.read(buf);
+            if (!(packet instanceof ConnectPacket connectPacket))
+                return;
 
-                JNetServerConnection connection = new JNetServerConnection(ctx, connectPacket.getId());
-                jNetServer.connect(connection);
+            packet.read(buf);
 
-                ChannelPipeline pipeline = ctx.pipeline();
-                pipeline.addLast(new JNetServerConnectionHandler(connection));
-                pipeline.remove(this);
-            }
+            JNetServerConnection connection = new JNetServerConnection(ctx, connectPacket.getId());
+            jNetServer.connect(connection);
+
+            ChannelPipeline pipeline = ctx.pipeline();
+            pipeline.addLast(new JNetServerConnectionHandler(connection));
+            pipeline.remove(this);
         } catch (JNetPacketUnregisteredException ignored) {
         }
     }

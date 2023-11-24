@@ -37,10 +37,11 @@ public class JNetServerConnectionHandler extends SimpleChannelInboundHandler<Byt
 
             List<Packet> feedback = packet.feedback();
 
-            if (feedback != null) {
-                for (Packet feedbackPacket : feedback) {
-                    connection.addToQueue(feedbackPacket);
-                }
+            if (feedback == null)
+                return;
+
+            for (Packet feedbackPacket : feedback) {
+                connection.addToQueue(feedbackPacket);
             }
         } catch (JNetPacketUnregisteredException ignored) {
         }
