@@ -14,12 +14,10 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 import net.jnetpack.exception.connection.JNetConnectionNotFound;
-import net.jnetpack.serialization.decoders.BooleanArrayDecoder;
-import net.jnetpack.serialization.decoders.number.VarIntDecoder;
-import net.jnetpack.serialization.decoders.number.VarLongDecoder;
-import net.jnetpack.serialization.encoders.BooleanArrayEncoder;
-import net.jnetpack.serialization.encoders.number.VarIntEncoder;
-import net.jnetpack.serialization.encoders.number.VarLongEncoder;
+import net.jnetpack.serialization.decoders.VarIntDecoder;
+import net.jnetpack.serialization.decoders.VarLongDecoder;
+import net.jnetpack.serialization.encoders.VarIntEncoder;
+import net.jnetpack.serialization.encoders.VarLongEncoder;
 import net.jnetpack.server.connection.JNetServerConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -116,14 +114,12 @@ public class JNetServer {
                         ChannelPipeline cp = ch.pipeline();
 
                         cp.addLast(new StringEncoder());
-                        cp.addLast(new BooleanArrayEncoder());
                         cp.addLast(new VarIntEncoder());
                         cp.addLast(new VarLongEncoder());
 
-                        cp.addLast(new BooleanArrayDecoder());
+                        cp.addLast(new StringDecoder());
                         cp.addLast(new VarIntDecoder());
                         cp.addLast(new VarLongDecoder());
-                        cp.addLast(new StringDecoder());
 
                         cp.addLast(new JNetServerHandler(jNetServer));
 
