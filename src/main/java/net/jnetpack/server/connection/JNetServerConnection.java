@@ -36,14 +36,7 @@ public class JNetServerConnection extends Thread {
     public JNetServerConnection(@NotNull ChannelHandlerContext channel, int connectionId) {
         this.channel = channel;
         this.connectionId = connectionId;
-        queue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> {
-            if (writer instanceof Packet packet) {
-                return JNetOptions.PACKET_REGISTRY.getPriority(packet.getClass()).getId();
-            } else if (writer instanceof PacketGroup packetGroup) {
-                return packetGroup.getPacketPriority().getId();
-            }
-            return PacketPriority.LOW.getId();
-        }));
+        queue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
     }
 
     /**
