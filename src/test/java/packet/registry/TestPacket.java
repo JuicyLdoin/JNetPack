@@ -1,6 +1,7 @@
 package packet.registry;
 
 import io.netty.buffer.ByteBuf;
+import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.registry.annotation.JNetPacket;
@@ -9,12 +10,12 @@ import net.jnetpack.packet.registry.annotation.JNetPacket;
 public class TestPacket extends Packet {
 
     @Override
-    public void write(ByteBuf buf) {
+    public void write(JNetBuffer buf) {
 
     }
 
     @Override
-    public void read(ByteBuf buf) {
+    public void read(JNetBuffer buf) {
 
     }
 }

@@ -1,6 +1,6 @@
 package net.jnetpack.packet.interfaces;
 
-import io.netty.buffer.ByteBuf;
+import net.jnetpack.JNetBuffer;
 
 /**
  * JNet reader
@@ -8,9 +8,9 @@ import io.netty.buffer.ByteBuf;
 public interface IReader {
 
     /**
-     * Read self from {@link ByteBuf netty ByteBuf}
+     * Read self from {@link JNetBuffer}
      *
-     * @param buf - {@link ByteBuf netty ByteBuf} which will be readed
+     * @param buf - {@link JNetBuffer} which will be readed
      */
-    void read(ByteBuf buf);
+    void read(JNetBuffer buf);
 }

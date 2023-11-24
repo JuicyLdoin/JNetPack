@@ -1,9 +1,9 @@
-package net.jnetpack.packet.defaults;
+package net.jnetpack.packet.common;
 
-import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.registry.annotation.JNetPacket;
 
@@ -16,12 +16,12 @@ public class ConnectPacket extends Packet {
     int id;
 
     @Override
-    public void read(ByteBuf buf) {
+    public void read(JNetBuffer buf) {
         id = buf.readInt();
     }
 
     @Override
-    public void write(ByteBuf buf) {
+    public void write(JNetBuffer buf) {
         buf.writeInt(id);
     }
 }

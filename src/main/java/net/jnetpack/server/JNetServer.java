@@ -14,10 +14,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 import net.jnetpack.exception.connection.JNetConnectionNotFound;
-import net.jnetpack.serialization.decoders.VarIntDecoder;
-import net.jnetpack.serialization.decoders.VarLongDecoder;
-import net.jnetpack.serialization.encoders.VarIntEncoder;
-import net.jnetpack.serialization.encoders.VarLongEncoder;
 import net.jnetpack.server.connection.JNetServerConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -106,21 +102,11 @@ public class JNetServer {
                 .group(connectionGroup, workGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<>() {
-
                     protected void initChannel(@NotNull Channel ch) {
-
                         ChannelPipeline cp = ch.pipeline();
-
                         cp.addLast(new StringEncoder());
-                        cp.addLast(new VarIntEncoder());
-                        cp.addLast(new VarLongEncoder());
-
                         cp.addLast(new StringDecoder());
-                        cp.addLast(new VarIntDecoder());
-                        cp.addLast(new VarLongDecoder());
-
                         cp.addLast(new JNetServerHandler(jNetServer));
-
                     }
                 })
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)

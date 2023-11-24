@@ -1,6 +1,6 @@
 package net.jnetpack.packet.interfaces;
 
-import io.netty.buffer.ByteBuf;
+import net.jnetpack.JNetBuffer;
 
 /**
  * JNet writer
@@ -8,9 +8,9 @@ import io.netty.buffer.ByteBuf;
 public interface IWriter {
 
     /**
-     * Write a self to {@link ByteBuf netty ByteBuf}
+     * Write a self to {@link JNetBuffer}
      *
-     * @param buf - {@link ByteBuf netty ByteBuf} in which writer will be written
+     * @param buf - {@link JNetBuffer} in which writer will be written
      */
-    void write(ByteBuf buf);
+    void write(JNetBuffer buf);
 }

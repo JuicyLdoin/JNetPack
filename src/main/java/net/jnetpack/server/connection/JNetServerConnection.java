@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.JNetBuffer;
 import net.jnetpack.JNetOptions;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketGroup;
@@ -62,7 +63,7 @@ public class JNetServerConnection extends Thread {
         while (channel.channel().isOpen()) {
             try {
                 IWriter writer = queue.take();
-                writer.write(channel.alloc().buffer());
+                writer.write(new JNetBuffer(channel.alloc().buffer()));
                 channel.flush();
             } catch (Exception exception) {
                 // TODO
