@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.packet.interfaces.ISender;
+import net.jnetpack.packet.registry.PacketRegistry;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,28 +24,30 @@ public class PacketGroup implements ISender {
     /**
      * Default constructor
      */
-    public PacketGroup() {
-        this(PacketPriority.MEDIUM);
+    public PacketGroup(PacketRegistry packetRegistry) {
+        this(packetRegistry, PacketPriority.MEDIUM);
     }
 
     /**
      * Constructor with {@link PacketPriority}
      *
+     * @param packetRegistry - JNet {@link PacketRegistry}
      * @param packetPriority - the priority that will be used to send the group
      */
-    public PacketGroup(PacketPriority packetPriority) {
+    public PacketGroup(PacketRegistry packetRegistry, PacketPriority packetPriority) {
         this.packetPriority = packetPriority;
-        queue = new PriorityQueue<>(Comparator.comparing(Packet::getPacketPriority));
+        queue = new PriorityQueue<>(Comparator.comparing(packet -> packetRegistry.getId(packet.getClass())));
     }
 
     /**
      * Constructor with {@link PacketPriority} and {@link Packet JNet packets} array
      *
      * @param packetPriority - the priority that will be used to send the group
+     * @param packetRegistry - JNet {@link PacketRegistry}
      * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
      */
-    public PacketGroup(PacketPriority packetPriority, Packet... packets) {
-        this(packetPriority);
+    public PacketGroup(PacketPriority packetPriority, PacketRegistry packetRegistry, Packet... packets) {
+        this(packetRegistry, packetPriority);
         queue.addAll(List.of(packets));
     }
 

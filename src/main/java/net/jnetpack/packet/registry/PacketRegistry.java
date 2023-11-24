@@ -18,6 +18,7 @@ import java.util.Map;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PacketRegistry {
 
+    Map<Class<? extends Packet>, Byte> idPacketMap;
     Map<Byte, Class<? extends Packet>> packetMap;
     Map<Byte, PacketPriority> priorityMap;
 
@@ -27,6 +28,7 @@ public class PacketRegistry {
      * @param packageName - name of the package from which packets will be taken and registered
      */
     public PacketRegistry(String packageName) {
+        idPacketMap = new HashMap<>();
         packetMap = new HashMap<>();
         priorityMap = new HashMap<>();
 
@@ -61,12 +63,27 @@ public class PacketRegistry {
      *
      * @param id - packet id
      * @return - packet class
+     * @throws JNetPacketUnregisteredException - if packet isn`t registered
      */
-    protected Class<? extends Packet> get(byte id) {
+    protected Class<? extends Packet> get(byte id) throws JNetPacketUnregisteredException {
         if (!packetMap.containsKey(id))
             throw new JNetPacketUnregisteredException();
 
         return packetMap.get(id);
+    }
+
+    /**
+     * Gets a packet id from packet class
+     *
+     * @param clazz - packet class
+     * @return - packet id
+     * @throws JNetPacketUnregisteredException - if packet isn`t registered
+     */
+    public byte getId(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
+        if (!idPacketMap.containsKey(clazz))
+            throw new JNetPacketUnregisteredException();
+
+        return idPacketMap.get(clazz);
     }
 
     /**
@@ -77,6 +94,7 @@ public class PacketRegistry {
      * @param packet         - packet class which will be registered
      */
     public void register(byte id, PacketPriority packetPriority, Class<? extends Packet> packet) {
+        idPacketMap.put(packet, id);
         packetMap.put(id, packet);
         priorityMap.put(id, packetPriority);
     }
@@ -87,6 +105,7 @@ public class PacketRegistry {
      * @param id - packet id which will be unregistered
      */
     public void unregister(byte id) {
+        idPacketMap.remove(get(id));
         packetMap.remove(id);
         priorityMap.remove(id);
     }
