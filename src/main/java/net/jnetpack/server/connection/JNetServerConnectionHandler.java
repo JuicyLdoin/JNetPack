@@ -42,6 +42,7 @@ public class JNetServerConnectionHandler extends SimpleChannelInboundHandler<Byt
                     connection.addToQueue(feedbackPacket);
                 }
             }
-        } catch (JNetPacketUnregisteredException ignored) {}
+        } catch (JNetPacketUnregisteredException ignored) {
+        }
     }
 }

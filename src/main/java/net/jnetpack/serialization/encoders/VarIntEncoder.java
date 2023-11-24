@@ -11,16 +11,14 @@ public class VarIntEncoder extends MessageToByteEncoder<Integer> {
 
     protected void encode(ChannelHandlerContext ctx, Integer value, ByteBuf buf) {
         do {
-
             byte temp = (byte) (value & 0b01111111);
-
             value >>>= 7;
 
-            if (value != 0)
+            if (value != 0) {
                 temp |= 0b10000000;
+            }
 
             buf.writeByte(temp);
-
         } while (value != 0);
     }
 }

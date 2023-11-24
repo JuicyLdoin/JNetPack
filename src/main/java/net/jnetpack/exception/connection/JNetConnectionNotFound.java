@@ -1,3 +1,4 @@
 package net.jnetpack.exception.connection;
 
-public class JNetConnectionNotFound extends NullPointerException {}
+public class JNetConnectionNotFound extends NullPointerException {
+}

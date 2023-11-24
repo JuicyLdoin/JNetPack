@@ -45,6 +45,7 @@ public class JNetServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 pipeline.addLast(new JNetServerConnectionHandler(connection));
                 pipeline.remove(this);
             }
-        } catch (JNetPacketUnregisteredException ignored) {}
+        } catch (JNetPacketUnregisteredException ignored) {
+        }
     }
 }

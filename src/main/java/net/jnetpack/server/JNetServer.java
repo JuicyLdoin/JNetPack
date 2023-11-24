@@ -34,10 +34,8 @@ public class JNetServer {
 
     final NioEventLoopGroup connectionGroup;
     final NioEventLoopGroup workGroup;
-
-    Channel channel;
-
     final Map<Integer, JNetServerConnection> connectionMap;
+    Channel channel;
     boolean connected;
 
     /**

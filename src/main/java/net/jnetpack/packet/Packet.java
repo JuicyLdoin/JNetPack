@@ -10,7 +10,8 @@ import java.util.List;
  */
 public abstract class Packet implements IWriter, IReader {
 
-    public void work() {}
+    public void work() {
+    }
 
     public List<Packet> feedback() {
         return null;

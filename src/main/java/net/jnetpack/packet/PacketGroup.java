@@ -69,7 +69,8 @@ public class PacketGroup implements IWriter {
      */
     public void write(ByteBuf buf) {
         Packet packet;
-        while ((packet = queue.poll()) != null)
+        while ((packet = queue.poll()) != null) {
             packet.write(buf);
+        }
     }
 }
