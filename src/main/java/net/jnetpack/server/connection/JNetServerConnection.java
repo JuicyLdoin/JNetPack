@@ -4,9 +4,11 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.JNetOptions;
 import net.jnetpack.packet.Packet;
+import net.jnetpack.packet.PacketGroup;
+import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.interfaces.IWriter;
-import net.jnetpack.packet.registry.PacketRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -21,29 +23,26 @@ public class JNetServerConnection extends Thread {
     ChannelHandlerContext channel;
 
     @Getter
-    String connectionName;
+    int connectionId;
     PriorityBlockingQueue<IWriter> queue;
-
-    @Getter
-    PacketRegistry packetRegistry;
 
     /**
      * JNetServerConnection constructor
      *
-     * @param channel        - netty channel context
-     * @param connectionName - JNet connection name
-     * @param packetRegistry - JNet packet registry
+     * @param channel      - netty channel context
+     * @param connectionId - connection id
      */
-    public JNetServerConnection(@NotNull ChannelHandlerContext channel, String connectionName, PacketRegistry packetRegistry) {
+    public JNetServerConnection(@NotNull ChannelHandlerContext channel, int connectionId) {
         this.channel = channel;
-        this.connectionName = connectionName;
+        this.connectionId = connectionId;
         queue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> {
             if (writer instanceof Packet packet) {
-                return packetRegistry.getPriority(packet.getClass()).ordinal();
+                return JNetOptions.PACKET_REGISTRY.getPriority(packet.getClass()).getId();
+            } else if (writer instanceof PacketGroup packetGroup) {
+                return packetGroup.getPacketPriority().getId();
             }
-            return 1;
+            return PacketPriority.LOW.getId();
         }));
-        this.packetRegistry = packetRegistry;
     }
 
     /**
