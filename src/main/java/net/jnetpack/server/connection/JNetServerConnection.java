@@ -10,6 +10,7 @@ import net.jnetpack.JNetOptions;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketGroup;
 import net.jnetpack.packet.PacketPriority;
+import net.jnetpack.packet.common.ExceptionPacket;
 import net.jnetpack.packet.interfaces.IWriter;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +84,8 @@ public class JNetServerConnection extends Thread {
                 writer.write(new JNetBuffer(channel.alloc().buffer()));
                 channel.flush();
             } catch (Exception exception) {
-                // TODO
+                addToQueue(new ExceptionPacket(PacketPriority.HIGH, exception.getMessage()));
+                exception.printStackTrace();
             }
         }
     }
