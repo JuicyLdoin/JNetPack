@@ -1,6 +1,5 @@
 package net.jnetpack.packet;
 
-import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -64,9 +63,9 @@ public class PacketGroup implements IWriter {
     }
 
     /**
-     * Sent all packets to netty {@link ByteBuf}
+     * Sent all packets to {@link JNetBuffer}
      *
-     * @param buf - netty {@link ByteBuf}
+     * @param buf - {@link JNetBuffer}
      */
     public void write(JNetBuffer buf) {
         Packet packet;
