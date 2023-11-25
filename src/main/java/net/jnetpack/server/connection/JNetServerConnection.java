@@ -1,6 +1,5 @@
 package net.jnetpack.server.connection;
 
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -9,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.JNetOptions;
 import net.jnetpack.packet.Packet;
+import net.jnetpack.packet.PacketGroup;
+import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.interfaces.IWriter;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,9 +68,7 @@ public class JNetServerConnection extends Thread {
             if (feedback == null)
                 return;
 
-            for (Packet feedbackPacket : feedback) {
-                addToQueue(feedbackPacket);
-            }
+            addToQueue(new PacketGroup(PacketPriority.HIGH, JNetOptions.PACKET_REGISTRY, feedback));
         });
     }
 

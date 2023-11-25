@@ -7,6 +7,7 @@ import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.interfaces.IWriter;
 import net.jnetpack.packet.registry.PacketRegistry;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -47,8 +48,19 @@ public class PacketGroup implements IWriter {
      * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
      */
     public PacketGroup(PacketPriority packetPriority, PacketRegistry packetRegistry, Packet... packets) {
+        this(packetPriority, packetRegistry, Arrays.asList(packets));
+    }
+
+    /**
+     * Constructor with {@link PacketPriority} and {@link Packet JNet packets} array
+     *
+     * @param packetPriority - the priority that will be used to send the group
+     * @param packetRegistry - JNet {@link PacketRegistry}
+     * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
+     */
+    public PacketGroup(PacketPriority packetPriority, PacketRegistry packetRegistry, List<Packet> packets) {
         this(packetRegistry, packetPriority);
-        queue.addAll(List.of(packets));
+        queue.addAll(packets);
     }
 
     /**
