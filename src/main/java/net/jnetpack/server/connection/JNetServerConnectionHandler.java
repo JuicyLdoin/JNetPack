@@ -11,8 +11,6 @@ import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
  * JNet server connection handler
  */
@@ -33,16 +31,7 @@ public class JNetServerConnectionHandler extends JNetChannelHandler {
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
             packet.read(buf);
-            packet.work();
-
-            List<Packet> feedback = packet.feedback();
-
-            if (feedback == null)
-                return;
-
-            for (Packet feedbackPacket : feedback) {
-                connection.addToQueue(feedbackPacket);
-            }
+            connection.work(packet);
         } catch (JNetPacketUnregisteredException ignored) {
         }
     }

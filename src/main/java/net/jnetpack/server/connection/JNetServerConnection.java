@@ -1,14 +1,21 @@
 package net.jnetpack.server.connection;
 
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
+import net.jnetpack.JNetOptions;
+import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -23,6 +30,8 @@ public class JNetServerConnection extends Thread {
     int connectionId;
     PriorityBlockingQueue<IWriter> queue;
 
+    ExecutorService executor;
+
     /**
      * JNetServerConnection constructor
      *
@@ -33,6 +42,7 @@ public class JNetServerConnection extends Thread {
         this.channel = channel;
         this.connectionId = connectionId;
         queue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
+        executor = Executors.newFixedThreadPool(JNetOptions.CONNECTION_THREADS);
     }
 
     /**
@@ -42,6 +52,25 @@ public class JNetServerConnection extends Thread {
      */
     public void addToQueue(IWriter writer) {
         queue.add(writer);
+    }
+
+    /**
+     * Send packet to work in executor
+     *
+     * @param packet - target packet
+     */
+    public void work(Packet packet) {
+        executor.submit(() -> {
+            packet.work();
+            List<Packet> feedback = packet.feedback();
+
+            if (feedback == null)
+                return;
+
+            for (Packet feedbackPacket : feedback) {
+                addToQueue(feedbackPacket);
+            }
+        });
     }
 
     /**
@@ -58,5 +87,16 @@ public class JNetServerConnection extends Thread {
                 // TODO
             }
         }
+    }
+
+    /**
+     * Shutdown connection
+     */
+    public void close() {
+        channel.channel().closeFuture().addListener((ChannelFutureListener) future -> {
+            queue.clear();
+            executor.shutdown();
+            interrupt();
+        });
     }
 }

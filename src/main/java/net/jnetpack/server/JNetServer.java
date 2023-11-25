@@ -88,6 +88,15 @@ public class JNetServer {
     }
 
     /**
+     * Close {@link JNetServerConnection JNet connection}
+     *
+     * @param id - connection id
+     */
+    public void closeConnection(int id) {
+        connectionMap.remove(id).close();
+    }
+
+    /**
      * Starts the server
      *
      * @throws JNetServerAlreadyConnectedException - server already connected
