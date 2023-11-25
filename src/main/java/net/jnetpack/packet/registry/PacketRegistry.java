@@ -57,7 +57,7 @@ public class PacketRegistry {
      */
     public Packet createPacket(int id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        return get(id).getConstructor().newInstance();
+        return get(id).getConstructor(PacketPriority.class).newInstance(priorityMap.get(id));
     }
 
     /**
@@ -86,17 +86,6 @@ public class PacketRegistry {
             throw new JNetPacketUnregisteredException();
 
         return idPacketMap.get(clazz);
-    }
-
-    /**
-     * Gets a packet id from packet class
-     *
-     * @param clazz - packet class
-     * @return - packet id
-     * @throws JNetPacketUnregisteredException - if packet isn`t registered
-     */
-    public PacketPriority getPriority(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
-        return priorityMap.get(getId(clazz));
     }
 
     /**
@@ -130,5 +119,9 @@ public class PacketRegistry {
         idPacketMap.clear();
         packetMap.clear();
         priorityMap.clear();
+    }
+
+    public void merge(PacketRegistry packetRegistry) {
+        packetRegistry.getIdPacketMap().forEach((clazz, id) -> register(id, packetRegistry.priorityMap.get(id), clazz));
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.Packet;
+import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.registry.annotation.JNetPacket;
 
 @JNetPacket(id = 0)
@@ -14,6 +15,10 @@ import net.jnetpack.packet.registry.annotation.JNetPacket;
 public class ConnectPacket extends Packet {
 
     int id;
+
+    public ConnectPacket(PacketPriority packetPriority) {
+        super(packetPriority);
+    }
 
     @Override
     public void read(JNetBuffer buf) {

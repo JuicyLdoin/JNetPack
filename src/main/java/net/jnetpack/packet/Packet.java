@@ -1,6 +1,9 @@
 package net.jnetpack.packet;
 
-import net.jnetpack.JNetOptions;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import net.jnetpack.packet.interfaces.IReader;
 import net.jnetpack.packet.interfaces.IWriter;
 
@@ -9,11 +12,12 @@ import java.util.List;
 /**
  * JNet packet
  */
+@Getter
+@AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class Packet implements IWriter, IReader {
 
-    public PacketPriority getPacketPriority() {
-        return JNetOptions.PACKET_REGISTRY.getPriority(getClass());
-    }
+    PacketPriority packetPriority;
 
     public void work() {
     }
