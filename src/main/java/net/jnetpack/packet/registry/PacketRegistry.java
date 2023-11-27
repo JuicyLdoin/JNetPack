@@ -23,6 +23,7 @@ public class PacketRegistry {
     Map<Class<? extends Packet>, Integer> idPacketMap;
     Map<Integer, Class<? extends Packet>> packetMap;
     Map<Integer, PacketPriority> priorityMap;
+    Map<Integer, boolean[]> optionsMap;
 
     /**
      * Default constructor
@@ -33,6 +34,7 @@ public class PacketRegistry {
         idPacketMap = new HashMap<>();
         packetMap = new HashMap<>();
         priorityMap = new HashMap<>();
+        optionsMap = new HashMap<>();
 
         new ReflectionUtil().getClassesImplement(packageName, Packet.class).forEach(packetClass -> {
             JNetPacket jNetPacket = packetClass.getAnnotation(JNetPacket.class);
@@ -40,7 +42,7 @@ public class PacketRegistry {
             if (jNetPacket == null)
                 return;
 
-            register(jNetPacket.id(), jNetPacket.priority(), packetClass);
+            register(jNetPacket.id(), jNetPacket.priority(), jNetPacket.options(), packetClass);
         });
     }
 
@@ -57,7 +59,7 @@ public class PacketRegistry {
      */
     public Packet createPacket(int id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        return get(id).getConstructor(PacketPriority.class).newInstance(priorityMap.get(id));
+        return get(id).getConstructor(Integer.class, PacketPriority.class, boolean[].class).newInstance(id, priorityMap.get(id), optionsMap.get(id));
     }
 
     /**
@@ -93,12 +95,14 @@ public class PacketRegistry {
      *
      * @param id             - packet id which will be registered
      * @param packetPriority - packet priority which will be registered
+     * @param options        - packet options which will be registered
      * @param packet         - packet class which will be registered
      */
-    public void register(int id, PacketPriority packetPriority, Class<? extends Packet> packet) {
+    public void register(int id, PacketPriority packetPriority, boolean[] options, Class<? extends Packet> packet) {
         idPacketMap.put(packet, id);
         packetMap.put(id, packet);
         priorityMap.put(id, packetPriority);
+        optionsMap.put(id, options);
     }
 
     /**
@@ -110,6 +114,7 @@ public class PacketRegistry {
         idPacketMap.remove(get(id));
         packetMap.remove(id);
         priorityMap.remove(id);
+        optionsMap.remove(id);
     }
 
     /**
@@ -119,9 +124,10 @@ public class PacketRegistry {
         idPacketMap.clear();
         packetMap.clear();
         priorityMap.clear();
+        optionsMap.clear();
     }
 
     public void merge(PacketRegistry packetRegistry) {
-        packetRegistry.getIdPacketMap().forEach((clazz, id) -> register(id, packetRegistry.priorityMap.get(id), clazz));
+        packetRegistry.getIdPacketMap().forEach((clazz, id) -> register(id, packetRegistry.priorityMap.get(id), optionsMap.get(id), clazz));
     }
 }
