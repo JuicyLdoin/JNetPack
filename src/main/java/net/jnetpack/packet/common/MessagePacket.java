@@ -29,6 +29,7 @@ public class MessagePacket extends Packet {
 
     @Override
     public void read(JNetBuffer buf) {
+        super.read(buf);
         message = buf.readString();
     }
 

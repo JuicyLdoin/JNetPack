@@ -16,13 +16,13 @@ public class ConnectPacket extends Packet {
 
     int id;
 
-
     public ConnectPacket(int packetId, PacketPriority packetPriority, boolean[] options) {
         super(packetId, packetPriority, options);
     }
 
     @Override
     public void read(JNetBuffer buf) {
+        super.read(buf);
         id = buf.readInt();
     }
 

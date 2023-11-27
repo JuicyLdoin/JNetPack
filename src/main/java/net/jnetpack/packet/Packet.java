@@ -15,10 +15,10 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Packet implements IWriter, IReader {
 
-    int packetId;
+    final int packetId;
     PacketPriority packetPriority;
     boolean[] options;
 
@@ -33,6 +33,12 @@ public abstract class Packet implements IWriter, IReader {
         return null;
     }
 
+    @Override
+    public void read(JNetBuffer buf) {
+        options = buf.readBooleanArray();
+    }
+
+    @Override
     public void write(JNetBuffer buf) {
         buf.writeVarInt(packetId);
         buf.writeBooleanArray(options);
