@@ -16,8 +16,9 @@ public class ConnectPacket extends Packet {
 
     int id;
 
-    public ConnectPacket(PacketPriority packetPriority) {
-        super(packetPriority);
+
+    public ConnectPacket(int packetId, PacketPriority packetPriority, boolean[] options) {
+        super(packetId, packetPriority, options);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class ConnectPacket extends Packet {
 
     @Override
     public void write(JNetBuffer buf) {
+        super.write(buf);
         buf.writeInt(id);
     }
 }

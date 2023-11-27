@@ -25,4 +25,14 @@ public @interface JNetPacket {
      */
     PacketPriority priority() default PacketPriority.MEDIUM;
 
+    /**
+     * Packet options
+     * <p>
+     * 0 - is async
+     * 1 - has feedback
+     *
+     * @return - array of booleans (max work length - 8)
+     */
+    boolean[] options() default {};
+
 }

@@ -6,11 +6,11 @@ import net.jnetpack.packet.registry.annotation.JNetPacket;
 @JNetPacket(id = -1, priority = PacketPriority.HIGH)
 public class ExceptionPacket extends MessagePacket {
 
-    public ExceptionPacket(PacketPriority packetPriority) {
-        super(packetPriority);
+    public ExceptionPacket(int packetId, PacketPriority packetPriority, boolean[] options) {
+        super(packetId, packetPriority, options);
     }
 
-    public ExceptionPacket(PacketPriority packetPriority, String message) {
-        super(packetPriority, message);
+    public ExceptionPacket(int packetId, PacketPriority packetPriority, boolean[] options, String message) {
+        super(packetId, packetPriority, options, message);
     }
 }
