@@ -95,6 +95,7 @@ public class JNetServerConnection extends Thread {
         if (feedback == null)
             return;
 
+        feedback.forEach(packet1 -> packet1.setNeedFeedback(false));
         addToQueue(new PacketGroup(PacketPriority.HIGH, JNetOptions.PACKET_REGISTRY, feedback));
     }
 

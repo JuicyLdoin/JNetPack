@@ -22,6 +22,10 @@ public abstract class Packet implements IWriter, IReader {
     PacketPriority packetPriority;
     boolean[] options;
 
+    public void setNeedFeedback(boolean need) {
+        options[1] = need;
+    }
+
     public void work() {
     }
 
