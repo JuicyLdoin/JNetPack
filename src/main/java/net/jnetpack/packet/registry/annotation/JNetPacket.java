@@ -33,6 +33,6 @@ public @interface JNetPacket {
      *
      * @return - array of booleans (max work length - 8)
      */
-    boolean[] options() default {};
+    boolean[] options() default {true, false};
 
 }
