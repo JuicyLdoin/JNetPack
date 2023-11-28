@@ -15,6 +15,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * JNet input packets queue
+ */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JNetInputWorker extends Thread {
 
@@ -24,6 +27,12 @@ public class JNetInputWorker extends Thread {
     ExecutorService executor;
     PriorityBlockingQueue<Packet> inputQueue;
 
+    /**
+     * JNetInputWorker constructor
+     *
+     * @param channel      - {@link ChannelHandlerContext netty channel context}
+     * @param outputWorker - {@link JNetOutputWorker}
+     */
     public JNetInputWorker(ChannelHandlerContext channel, JNetOutputWorker outputWorker) {
         this.channel = channel;
         this.outputWorker = outputWorker;

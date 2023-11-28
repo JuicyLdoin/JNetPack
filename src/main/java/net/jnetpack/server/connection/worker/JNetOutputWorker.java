@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * JNet output packets queue
+ * JNet output writers queue
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JNetOutputWorker extends Thread {
