@@ -31,7 +31,7 @@ public class JNetServerConnectionHandler extends JNetChannelHandler {
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
             packet.read(buf);
-            connection.work(packet);
+            connection.receivePacket(packet);
         } catch (JNetPacketUnregisteredException ignored) {
         }
     }
