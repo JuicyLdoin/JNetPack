@@ -26,12 +26,13 @@ public class JNetServerHandler extends JNetChannelHandler {
 
     /**
      * Read data
+     * If packet is {@link ConnectPacket} handle it and add new {@link JNetServerConnection}
      *
      * @param ctx - netty channel
      * @param buf - data
      */
     public void read(@NotNull ChannelHandlerContext ctx, @NotNull JNetBuffer buf) throws Exception {
-        int packetId = buf.readInt();
+        int packetId = buf.readVarInt();
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
 
