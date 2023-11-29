@@ -41,7 +41,11 @@ public class JNetServerHandler extends JNetChannelHandler {
             packet.read(buf);
 
             JNetServerConnection connection = new JNetServerConnection(ctx, connectPacket.getId());
-            jNetServer.connect(connection);
+            if (JNetOptions.OVERRIDE_SERVER_CONNECTIONS) {
+                jNetServer.overrideConnect(connection);
+            } else {
+                jNetServer.connect(connection);
+            }
 
             ChannelPipeline pipeline = ctx.pipeline();
             pipeline.addLast(new JNetServerConnectionHandler(connection));
