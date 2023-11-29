@@ -11,7 +11,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
-import net.jnetpack.exception.connection.JNetConnectionNotFound;
+import net.jnetpack.exception.connection.JNetConnectionAlreadyExistsException;
+import net.jnetpack.exception.connection.JNetConnectionNotFoundException;
 import net.jnetpack.server.connection.JNetServerConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,15 +64,15 @@ public class JNetServer {
     }
 
     /**
-     * Get {@link JNetServerConnection} from id
+     * Get {@link JNetServerConnection} from ID
      *
      * @param id - connection id
      * @return - {@link JNetServerConnection}
-     * @throws JNetConnectionNotFound - connection not found
+     * @throws JNetConnectionNotFoundException - connection not found
      */
-    public JNetServerConnection getConnection(int id) throws JNetConnectionNotFound {
+    public JNetServerConnection getConnection(int id) throws JNetConnectionNotFoundException {
         if (!connectionMap.containsKey(id))
-            throw new JNetConnectionNotFound();
+            throw new JNetConnectionNotFoundException();
 
         return connectionMap.get(id);
     }
@@ -80,18 +81,36 @@ public class JNetServer {
      * Add {@link JNetServerConnection} to connectionMap
      *
      * @param connection - {@link JNetServerConnection}
+     * @throws JNetConnectionAlreadyExistsException - if connection already exists
      */
-    public void connect(JNetServerConnection connection) {
+    public void connect(JNetServerConnection connection) throws JNetConnectionAlreadyExistsException {
+        if (connectionMap.containsKey(connection.getConnectionId()))
+            throw new JNetConnectionAlreadyExistsException();
         connectionMap.put(connection.getConnectionId(), connection);
     }
 
     /**
-     * Close {@link JNetServerConnection JNet connection}
+     * Add {@link JNetServerConnection} to connectionMap and close previous connection with same ID if exists
+     *
+     * @param connection - {@link JNetServerConnection}
+     */
+    public void overrideConnect(JNetServerConnection connection) {
+        int id = connection.getConnectionId();
+        if (connectionMap.containsKey(id)) {
+            connectionMap.remove(id).close();
+        }
+        connectionMap.put(id, connection);
+    }
+
+    /**
+     * Close {@link JNetServerConnection}
      *
      * @param id - connection id
      */
-    public void closeConnection(int id) {
-        connectionMap.remove(id).close();
+    public void closeConnection(int id) throws JNetConnectionNotFoundException {
+        JNetServerConnection connection = getConnection(id);
+        connection.close();
+        connectionMap.remove(id);
     }
 
     /**
