@@ -36,7 +36,7 @@ public class JNetInputWorker extends Thread {
     public JNetInputWorker(ChannelHandlerContext channel, JNetOutputWorker outputWorker) {
         this.channel = channel;
         this.outputWorker = outputWorker;
-        executor = Executors.newFixedThreadPool(JNetOptions.CONNECTION_THREADS);
+        executor = Executors.newFixedThreadPool(JNetOptions.WORKER_THREADS);
         inputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(packet -> packet.getPacketPriority().getId()));
         start();
     }
