@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
-import net.jnetpack.server.connection.worker.JNetInputWorker;
-import net.jnetpack.server.connection.worker.JNetOutputWorker;
+import net.jnetpack.worker.JNetInputWorker;
+import net.jnetpack.worker.JNetOutputWorker;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -4,6 +4,7 @@ import net.jnetpack.packet.registry.PacketRegistry;
 
 public class JNetOptions {
 
+    public static int CLIENT_THREADS = 2;
     public static int CONNECTION_THREADS = 4;
     public static PacketRegistry PACKET_REGISTRY = new PacketRegistry("net.jnetpack.packet.defaults");
 

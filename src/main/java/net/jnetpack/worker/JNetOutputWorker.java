@@ -1,4 +1,4 @@
-package net.jnetpack.server.connection.worker;
+package net.jnetpack.worker;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -30,6 +30,7 @@ public class JNetOutputWorker extends Thread {
     public JNetOutputWorker(ChannelHandlerContext channel) {
         this.channel = channel;
         outputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
+        start();
     }
 
     /**

@@ -1,4 +1,4 @@
-package net.jnetpack.server.connection.worker;
+package net.jnetpack.worker;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -38,6 +38,7 @@ public class JNetInputWorker extends Thread {
         this.outputWorker = outputWorker;
         executor = Executors.newFixedThreadPool(JNetOptions.CONNECTION_THREADS);
         inputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(packet -> packet.getPacketPriority().getId()));
+        start();
     }
 
     /**

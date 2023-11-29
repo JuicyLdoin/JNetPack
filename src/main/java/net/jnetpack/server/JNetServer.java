@@ -8,8 +8,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
@@ -113,8 +111,6 @@ public class JNetServer {
                 .childHandler(new ChannelInitializer<>() {
                     protected void initChannel(@NotNull Channel ch) {
                         ChannelPipeline cp = ch.pipeline();
-                        cp.addLast(new StringEncoder());
-                        cp.addLast(new StringDecoder());
                         cp.addLast(new JNetServerHandler(jNetServer));
                     }
                 })
