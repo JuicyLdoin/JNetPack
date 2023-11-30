@@ -59,7 +59,7 @@ public class PacketRegistry {
      */
     public Packet createPacket(int id) throws JNetPacketUnregisteredException, NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-        return get(id).getConstructor(Integer.class, PacketPriority.class, boolean[].class).newInstance(id, priorityMap.get(id), optionsMap.get(id));
+        return get(id).getConstructor(int.class, PacketPriority.class, boolean[].class).newInstance(id, priorityMap.get(id), optionsMap.get(id));
     }
 
     /**
