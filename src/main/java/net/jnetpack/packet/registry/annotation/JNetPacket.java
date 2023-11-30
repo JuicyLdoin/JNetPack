@@ -2,12 +2,15 @@ package net.jnetpack.packet.registry.annotation;
 
 import net.jnetpack.packet.PacketPriority;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation for {@link net.jnetpack.packet.Packet JNet packets}
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JNetPacket {
 
