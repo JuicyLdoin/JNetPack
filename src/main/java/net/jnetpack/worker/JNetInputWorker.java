@@ -4,6 +4,9 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetOptions;
+import net.jnetpack.event.EventHandlerManager;
+import net.jnetpack.event.interfaces.IEvent;
+import net.jnetpack.event.packet.PacketWorkEvent;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketGroup;
 import net.jnetpack.packet.PacketPriority;
@@ -27,15 +30,19 @@ public class JNetInputWorker extends Thread {
     ExecutorService executor;
     PriorityBlockingQueue<Packet> inputQueue;
 
+    EventHandlerManager eventHandlerManager;
+
     /**
      * JNetInputWorker constructor
      *
-     * @param channel      - {@link ChannelHandlerContext netty channel context}
-     * @param outputWorker - {@link JNetOutputWorker}
+     * @param channel             - {@link ChannelHandlerContext netty channel context}
+     * @param outputWorker        - {@link JNetOutputWorker}
+     * @param eventHandlerManager - {@link EventHandlerManager JNet handler manager}
      */
-    public JNetInputWorker(ChannelHandlerContext channel, JNetOutputWorker outputWorker) {
+    public JNetInputWorker(ChannelHandlerContext channel, JNetOutputWorker outputWorker, EventHandlerManager eventHandlerManager) {
         this.channel = channel;
         this.outputWorker = outputWorker;
+        this.eventHandlerManager = eventHandlerManager;
         executor = Executors.newFixedThreadPool(JNetOptions.WORKER_THREADS);
         inputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(packet -> packet.getPacketPriority().getId()));
         start();
@@ -51,12 +58,27 @@ public class JNetInputWorker extends Thread {
     }
 
     /**
+     * Call event in {@link #eventHandlerManager}
+     *
+     * @param event - target event
+     */
+    public void callEvent(IEvent event) {
+        eventHandlerManager.callEvent(event);
+    }
+
+    /**
      * Packet work
      * If packet is async (options[0]) - send to executor
      *
      * @param packet - target packet
      */
     public void work(Packet packet) {
+        PacketWorkEvent event = new PacketWorkEvent(packet);
+        callEvent(event);
+
+        if (event.isCancelled())
+            return;
+
         boolean[] options = packet.getOptions();
         boolean async = options[0];
         boolean feedback = options[1];

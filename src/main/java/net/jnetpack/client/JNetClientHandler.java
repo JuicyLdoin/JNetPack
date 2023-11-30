@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.JNetChannelHandler;
 import net.jnetpack.JNetOptions;
+import net.jnetpack.event.packet.PacketReadEvent;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
 
@@ -29,6 +30,7 @@ public class JNetClientHandler extends JNetChannelHandler {
         int packetId = buf.readInt();
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
+            jNetClient.callEvent(new PacketReadEvent(packet, buf));
             packet.read(buf);
             jNetClient.receivePacket(packet);
         } catch (JNetPacketUnregisteredException ignored) {

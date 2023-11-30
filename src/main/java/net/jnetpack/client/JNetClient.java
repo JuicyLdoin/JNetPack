@@ -9,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetChannelHandler;
 import net.jnetpack.JNetOptions;
+import net.jnetpack.event.EventHandlerManager;
+import net.jnetpack.event.interfaces.IEvent;
+import net.jnetpack.event.interfaces.IEventHandler;
 import net.jnetpack.exception.JNetClientAlreadyConnectedException;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
@@ -35,6 +38,8 @@ public class JNetClient {
     Channel channel;
 
     boolean connected;
+
+    final EventHandlerManager eventHandlerManager;
 
     /**
      * Default constructor
@@ -63,6 +68,7 @@ public class JNetClient {
         this.port = port;
         workGroup = new NioEventLoopGroup(JNetOptions.CLIENT_THREADS);
         connected = false;
+        eventHandlerManager = new EventHandlerManager();
     }
 
     /**
@@ -81,6 +87,33 @@ public class JNetClient {
      */
     public void receivePacket(Packet packet) {
         inputWorker.addToQueue(packet);
+    }
+
+    /**
+     * Register {@link IEventHandler JNet event handler}
+     *
+     * @param handler - target handlers
+     */
+    public void registerHandler(IEventHandler handler) {
+        eventHandlerManager.registerHandler(handler);
+    }
+
+    /**
+     * Unregister {@link IEventHandler JNet event handler}
+     *
+     * @param handler - target handlers
+     */
+    public void unregisterHandler(IEventHandler handler) {
+        eventHandlerManager.unregisterHandler(handler);
+    }
+
+    /**
+     * Call event in {@link #eventHandlerManager}
+     *
+     * @param event - target event
+     */
+    public void callEvent(IEvent event) {
+        eventHandlerManager.callEvent(event);
     }
 
     /**
@@ -104,8 +137,8 @@ public class JNetClient {
                         cp.addLast(handler);
 
                         ChannelHandlerContext context = cp.context(handler);
-                        outputWorker = new JNetOutputWorker(context);
-                        inputWorker = new JNetInputWorker(context, outputWorker);
+                        outputWorker = new JNetOutputWorker(context, eventHandlerManager);
+                        inputWorker = new JNetInputWorker(context, outputWorker, eventHandlerManager);
                     }
                 })
                 .option(ChannelOption.TCP_NODELAY, true)

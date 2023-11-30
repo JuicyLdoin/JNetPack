@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.JNetChannelHandler;
 import net.jnetpack.JNetOptions;
+import net.jnetpack.event.connection.ConnectionConnectEvent;
+import net.jnetpack.event.connection.ConnectionConnectedEvent;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.common.ConnectPacket;
@@ -41,7 +43,13 @@ public class JNetServerHandler extends JNetChannelHandler {
 
             packet.read(buf);
 
-            JNetServerConnection connection = new JNetServerConnection(ctx, connectPacket.getId());
+            JNetServerConnection connection = new JNetServerConnection(ctx, connectPacket.getId(), jNetServer.getEventHandlerManager());
+            ConnectionConnectEvent connectEvent = new ConnectionConnectEvent(connection);
+            jNetServer.callEvent(connectEvent);
+
+            if (connectEvent.isCancelled())
+                return;
+
             if (JNetOptions.OVERRIDE_SERVER_CONNECTIONS) {
                 jNetServer.overrideConnect(connection);
             } else {
@@ -51,6 +59,8 @@ public class JNetServerHandler extends JNetChannelHandler {
             ChannelPipeline pipeline = ctx.pipeline();
             pipeline.addLast(new JNetServerConnectionHandler(connection));
             pipeline.remove(this);
+
+            jNetServer.callEvent(new ConnectionConnectedEvent(connection));
         } catch (JNetPacketUnregisteredException ignored) {
         }
     }

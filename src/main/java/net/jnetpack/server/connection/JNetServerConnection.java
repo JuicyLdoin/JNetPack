@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.event.EventHandlerManager;
+import net.jnetpack.event.interfaces.IEvent;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
 import net.jnetpack.worker.JNetInputWorker;
@@ -25,17 +27,21 @@ public class JNetServerConnection {
     JNetOutputWorker outputWorker;
     JNetInputWorker inputWorker;
 
+    EventHandlerManager eventHandlerManager;
+
     /**
      * JNetServerConnection constructor
      *
-     * @param channel      - netty channel context
-     * @param connectionId - connection id
+     * @param channel             - netty channel context
+     * @param connectionId        - connection id
+     * @param eventHandlerManager - {@link EventHandlerManager JNet handler manager}
      */
-    public JNetServerConnection(@NotNull ChannelHandlerContext channel, int connectionId) {
+    public JNetServerConnection(@NotNull ChannelHandlerContext channel, int connectionId, @NotNull EventHandlerManager eventHandlerManager) {
+        this.eventHandlerManager = eventHandlerManager;
         this.channel = channel;
         this.connectionId = connectionId;
-        outputWorker = new JNetOutputWorker(channel);
-        inputWorker = new JNetInputWorker(channel, outputWorker);
+        outputWorker = new JNetOutputWorker(channel, eventHandlerManager);
+        inputWorker = new JNetInputWorker(channel, outputWorker, eventHandlerManager);
     }
 
     /**
@@ -54,6 +60,15 @@ public class JNetServerConnection {
      */
     public void receivePacket(Packet packet) {
         inputWorker.addToQueue(packet);
+    }
+
+    /**
+     * Call event in {@link #eventHandlerManager}
+     *
+     * @param event - target event
+     */
+    public void callEvent(IEvent event) {
+        eventHandlerManager.callEvent(event);
     }
 
     /**

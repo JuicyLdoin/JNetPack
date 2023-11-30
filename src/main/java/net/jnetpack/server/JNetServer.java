@@ -9,7 +9,11 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.jnetpack.event.EventHandlerManager;
+import net.jnetpack.event.interfaces.IEvent;
+import net.jnetpack.event.interfaces.IEventHandler;
 import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 import net.jnetpack.exception.connection.JNetConnectionAlreadyExistsException;
 import net.jnetpack.exception.connection.JNetConnectionNotFoundException;
@@ -32,6 +36,9 @@ public class JNetServer {
     final Map<Integer, JNetServerConnection> connectionMap;
     Channel channel;
     boolean connected;
+
+    @Getter
+    final EventHandlerManager eventHandlerManager;
 
     /**
      * Default constructor
@@ -61,6 +68,7 @@ public class JNetServer {
         workGroup = new NioEventLoopGroup(threads);
         connectionMap = new HashMap<>();
         connected = false;
+        eventHandlerManager = new EventHandlerManager();
     }
 
     /**
@@ -111,6 +119,33 @@ public class JNetServer {
         JNetServerConnection connection = getConnection(id);
         connection.close();
         connectionMap.remove(id);
+    }
+
+    /**
+     * Register {@link IEventHandler JNet event handler}
+     *
+     * @param handler - target handlers
+     */
+    public void registerHandler(IEventHandler handler) {
+        eventHandlerManager.registerHandler(handler);
+    }
+
+    /**
+     * Unregister {@link IEventHandler JNet event handler}
+     *
+     * @param handler - target handlers
+     */
+    public void unregisterHandler(IEventHandler handler) {
+        eventHandlerManager.unregisterHandler(handler);
+    }
+
+    /**
+     * Call event in {@link #eventHandlerManager}
+     *
+     * @param event - target event
+     */
+    public void callEvent(IEvent event) {
+        eventHandlerManager.callEvent(event);
     }
 
     /**

@@ -5,7 +5,11 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.JNetOptions;
+import net.jnetpack.event.EventHandlerManager;
+import net.jnetpack.event.interfaces.IEvent;
+import net.jnetpack.event.packet.PacketWriteEvent;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
+import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.common.ExceptionPacket;
 import net.jnetpack.packet.interfaces.IWriter;
 
@@ -22,13 +26,17 @@ public class JNetOutputWorker extends Thread {
     ChannelHandlerContext channel;
     PriorityBlockingQueue<IWriter> outputQueue;
 
+    EventHandlerManager eventHandlerManager;
+
     /**
      * JNetOutputWorker constructor
      *
-     * @param channel - {@link ChannelHandlerContext netty channel context}
+     * @param channel             - {@link ChannelHandlerContext netty channel context}
+     * @param eventHandlerManager - {@link EventHandlerManager JNet handler manager}
      */
-    public JNetOutputWorker(ChannelHandlerContext channel) {
+    public JNetOutputWorker(ChannelHandlerContext channel, EventHandlerManager eventHandlerManager) {
         this.channel = channel;
+        this.eventHandlerManager = eventHandlerManager;
         outputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
         start();
     }
@@ -43,6 +51,15 @@ public class JNetOutputWorker extends Thread {
     }
 
     /**
+     * Call event in {@link #eventHandlerManager}
+     *
+     * @param event - target event
+     */
+    public void callEvent(IEvent event) {
+        eventHandlerManager.callEvent(event);
+    }
+
+    /**
      * Thread run implementation
      * Send {@link IWriter} from outputQueue
      */
@@ -50,7 +67,13 @@ public class JNetOutputWorker extends Thread {
         while (channel.channel().isOpen()) {
             try {
                 IWriter writer = outputQueue.take();
-                writer.write(new JNetBuffer(channel.alloc().buffer()));
+                JNetBuffer buffer = new JNetBuffer(channel.alloc().buffer());
+
+                if (writer instanceof Packet packet) {
+                    callEvent(new PacketWriteEvent(packet, buffer));
+                }
+
+                writer.write(buffer);
                 channel.flush();
             } catch (Exception exception) {
                 try {
