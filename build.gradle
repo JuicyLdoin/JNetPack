@@ -31,3 +31,20 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.with {
+    withType(JavaCompile).tap {
+        configureEach {
+            options.encoding = 'UTF-8'
+            options.compilerArgs << '-Xlint:none'
+        }
+    }
+    processResources.filter { it.replace('\$version', version as String) }
+}
+
+jar {
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
