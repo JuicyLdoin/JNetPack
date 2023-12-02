@@ -8,6 +8,8 @@ import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.registry.annotation.JNetPacket;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @JNetPacket(id = 0)
 
 @Getter
@@ -23,12 +25,18 @@ public class ConnectPacket extends Packet {
     @Override
     public void read(JNetBuffer buf) {
         super.read(buf);
-        id = buf.readInt();
+        if (getOptions()[7]) { // set id to random
+            id = ThreadLocalRandom.current().nextInt();
+        } else {
+            id = buf.readVarInt();
+        }
     }
 
     @Override
     public void write(JNetBuffer buf) {
         super.write(buf);
-        buf.writeInt(id);
+        if (!getOptions()[7]) {
+            buf.writeVarInt(id);
+        }
     }
 }
