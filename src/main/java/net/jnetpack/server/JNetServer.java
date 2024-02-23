@@ -79,8 +79,9 @@ public class JNetServer {
      * @throws JNetConnectionNotFoundException - connection not found
      */
     public JNetServerConnection getConnection(int id) throws JNetConnectionNotFoundException {
-        if (!connectionMap.containsKey(id))
+        if (!connectionMap.containsKey(id)) {
             throw new JNetConnectionNotFoundException();
+        }
 
         return connectionMap.get(id);
     }
@@ -92,8 +93,10 @@ public class JNetServer {
      * @throws JNetConnectionAlreadyExistsException - if connection already exists
      */
     public void connect(JNetServerConnection connection) throws JNetConnectionAlreadyExistsException {
-        if (connectionMap.containsKey(connection.getConnectionId()))
+        if (connectionMap.containsKey(connection.getConnectionId())) {
             throw new JNetConnectionAlreadyExistsException();
+        }
+
         connectionMap.put(connection.getConnectionId(), connection);
     }
 
@@ -107,6 +110,7 @@ public class JNetServer {
         if (connectionMap.containsKey(id)) {
             connectionMap.remove(id).close();
         }
+
         connectionMap.put(id, connection);
     }
 
@@ -155,8 +159,9 @@ public class JNetServer {
      * @throws InterruptedException                - interrupted
      */
     public void start() throws JNetServerAlreadyConnectedException, InterruptedException {
-        if (connected)
+        if (connected) {
             throw new JNetServerAlreadyConnectedException();
+        }
 
         JNetServer jNetServer = this;
         ServerBootstrap bootstrap = new ServerBootstrap()
@@ -181,13 +186,15 @@ public class JNetServer {
      * Stops the server
      */
     public void stop() {
-        if (!connected)
+        if (!connected) {
             return;
+        }
 
         channel.close();
         workGroup.shutdownGracefully();
         connectionGroup.shutdownGracefully();
         connectionMap.clear();
+
         connected = false;
     }
 }

@@ -78,6 +78,7 @@ public class JNetServerConnection {
         channel.channel().closeFuture().addListener((ChannelFutureListener) future -> {
             outputWorker.close();
             inputWorker.close();
+            eventHandlerManager.close();
         });
     }
 }

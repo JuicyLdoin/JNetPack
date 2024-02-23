@@ -37,9 +37,9 @@ public class JNetServerHandler extends JNetChannelHandler {
         int packetId = buf.readVarInt();
         try {
             Packet packet = JNetOptions.PACKET_REGISTRY.createPacket(packetId);
-
-            if (!(packet instanceof ConnectPacket connectPacket))
+            if (!(packet instanceof ConnectPacket connectPacket)) {
                 return;
+            }
 
             packet.read(buf);
 
@@ -47,8 +47,9 @@ public class JNetServerHandler extends JNetChannelHandler {
             ConnectionConnectEvent connectEvent = new ConnectionConnectEvent(connection);
             jNetServer.callEvent(connectEvent);
 
-            if (connectEvent.isCancelled())
+            if (connectEvent.isCancelled()) {
                 return;
+            }
 
             if (JNetOptions.OVERRIDE_SERVER_CONNECTIONS) {
                 jNetServer.overrideConnect(connection);

@@ -69,6 +69,7 @@ public class JNetInputWorker extends Thread {
     /**
      * Packet work
      * If packet is async (options[0]) - send to executor
+     * If packet is having feedback (options[1]) - work with it
      *
      * @param packet - target packet
      */
@@ -76,8 +77,9 @@ public class JNetInputWorker extends Thread {
         PacketWorkEvent event = new PacketWorkEvent(packet);
         callEvent(event);
 
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         boolean[] options = packet.getOptions();
         boolean async = options[0];
@@ -91,6 +93,7 @@ public class JNetInputWorker extends Thread {
                     });
         } else {
             packet.work();
+
             if (feedback) {
                 workFeedback(packet);
             }
@@ -104,9 +107,9 @@ public class JNetInputWorker extends Thread {
      */
     private void workFeedback(Packet packet) {
         List<Packet> feedback = packet.feedback();
-
-        if (feedback == null)
+        if (feedback.isEmpty()) {
             return;
+        }
 
         feedback.forEach(packet1 -> packet1.setNeedFeedback(false));
         outputWorker.addToQueue(new PacketGroup(PacketPriority.HIGH, JNetOptions.PACKET_REGISTRY, feedback));

@@ -39,8 +39,9 @@ public class PacketRegistry {
         new ReflectionUtil().getClassesImplement(packageName, Packet.class).forEach(packetClass -> {
             JNetPacket jNetPacket = packetClass.getAnnotation(JNetPacket.class);
 
-            if (jNetPacket == null)
+            if (jNetPacket == null) {
                 return;
+            }
 
             register(jNetPacket.id(), jNetPacket.priority(), jNetPacket.options(), packetClass);
         });
@@ -70,8 +71,9 @@ public class PacketRegistry {
      * @throws JNetPacketUnregisteredException - if packet isn`t registered
      */
     protected Class<? extends Packet> get(int id) throws JNetPacketUnregisteredException {
-        if (!packetMap.containsKey(id))
+        if (!packetMap.containsKey(id)) {
             throw new JNetPacketUnregisteredException();
+        }
 
         return packetMap.get(id);
     }
@@ -84,8 +86,9 @@ public class PacketRegistry {
      * @throws JNetPacketUnregisteredException - if packet isn`t registered
      */
     public int getId(Class<? extends Packet> clazz) throws JNetPacketUnregisteredException {
-        if (!idPacketMap.containsKey(clazz))
+        if (!idPacketMap.containsKey(clazz)) {
             throw new JNetPacketUnregisteredException();
+        }
 
         return idPacketMap.get(clazz);
     }
@@ -128,6 +131,9 @@ public class PacketRegistry {
     }
 
     public void merge(PacketRegistry packetRegistry) {
-        packetRegistry.getIdPacketMap().forEach((clazz, id) -> register(id, packetRegistry.priorityMap.get(id), optionsMap.get(id), clazz));
+        for (Map.Entry<Class<? extends Packet>, Integer> entry : packetRegistry.getIdPacketMap().entrySet()) {
+            int id = entry.getValue();
+            register(id, packetRegistry.priorityMap.get(id), optionsMap.get(id), entry.getKey());
+        }
     }
 }

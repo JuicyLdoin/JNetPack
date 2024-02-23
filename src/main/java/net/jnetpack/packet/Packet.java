@@ -8,6 +8,7 @@ import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.interfaces.IReader;
 import net.jnetpack.packet.interfaces.IWriter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public abstract class Packet implements IWriter, IReader {
     }
 
     public List<Packet> feedback() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

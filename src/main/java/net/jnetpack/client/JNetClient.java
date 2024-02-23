@@ -151,8 +151,9 @@ public class JNetClient {
      * Stops the client
      */
     public void stop() {
-        if (!connected)
+        if (!connected) {
             return;
+        }
 
         channel.close();
         workGroup.shutdownGracefully();

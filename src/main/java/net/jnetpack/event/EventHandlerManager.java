@@ -6,8 +6,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetOptions;
 import net.jnetpack.event.annotation.EventHandler;
-import net.jnetpack.event.interfaces.IEventHandler;
 import net.jnetpack.event.interfaces.IEvent;
+import net.jnetpack.event.interfaces.IEventHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,17 +42,17 @@ public class EventHandlerManager {
      */
     @SuppressWarnings({"unchecked cast"})
     public void registerHandler(IEventHandler handler) {
-        boolean register = false;
         for (Method method : handler.getClass().getMethods()) {
             if (method.getParameterCount() != 1) {
                 continue;
             }
+
             EventHandler eventHandler = method.getAnnotation(EventHandler.class);
             if (eventHandler == null) {
                 continue;
             }
-            boolean async = eventHandler.async();
 
+            boolean async = eventHandler.async();
             if (async && executor == null) {
                 executor = Executors.newFixedThreadPool(JNetOptions.EVENT_HANDLER_THREADS);
             }
@@ -62,12 +62,11 @@ public class EventHandlerManager {
                 Class<? extends IEvent> clazz = (Class<? extends IEvent>) parameter.getType();
                 methodTable.put(registered, clazz, method);
                 asyncTable.put(registered, clazz, async);
-                register = true;
-            } catch (ClassCastException ignored) {}
-        }
-        if (register) {
-            handlers.put(handler, registered);
-            registered++;
+                handlers.put(handler, registered);
+
+                registered++;
+            } catch (ClassCastException ignored) {
+            }
         }
     }
 
@@ -88,10 +87,12 @@ public class EventHandlerManager {
      * Check if {@link #asyncTable} hasn`t true values and executor isn`t null then shutdown it
      */
     private void checkAsync() {
-        if (!asyncTable.values().contains(true) && executor != null) {
-            executor.shutdown();
-            executor = null;
+        if (asyncTable.values().contains(true) || executor == null) {
+            return;
         }
+
+        executor.shutdown();
+        executor = null;
     }
 
     /**
@@ -109,15 +110,16 @@ public class EventHandlerManager {
             if (!methodTable.containsRow(id) && !methodTable.containsColumn(clazz)) {
                 continue;
             }
-            boolean async = Boolean.TRUE.equals(asyncTable.get(id, clazz));
-            if (async) {
+
+            if (Boolean.TRUE.equals(asyncTable.get(id, clazz))) {
                 executor.submit(() -> Objects.requireNonNull(methodTable.get(id, clazz)).invoke(entry.getKey(), entry));
             } else {
                 try {
                     Objects.requireNonNull(methodTable.get(id, clazz)).invoke(entry.getKey(), event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
-                } catch (NullPointerException ignored) {}
+                } catch (NullPointerException ignored) {
+                }
             }
         }
     }
