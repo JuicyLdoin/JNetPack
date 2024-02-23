@@ -22,10 +22,10 @@ import java.util.concurrent.PriorityBlockingQueue;
  * JNet input packets queue
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class JNetInputWorker extends Thread {
+public class JNetInputWorker extends Thread implements IJNetInputWorker {
 
     ChannelHandlerContext channel;
-    JNetOutputWorker outputWorker;
+    IJNetOutputWorker outputWorker;
 
     ExecutorService executor;
     PriorityBlockingQueue<Packet> inputQueue;
@@ -39,7 +39,7 @@ public class JNetInputWorker extends Thread {
      * @param outputWorker        - {@link JNetOutputWorker}
      * @param eventHandlerManager - {@link EventHandlerManager JNet handler manager}
      */
-    public JNetInputWorker(ChannelHandlerContext channel, JNetOutputWorker outputWorker, EventHandlerManager eventHandlerManager) {
+    public JNetInputWorker(ChannelHandlerContext channel, IJNetOutputWorker outputWorker, EventHandlerManager eventHandlerManager) {
         this.channel = channel;
         this.outputWorker = outputWorker;
         this.eventHandlerManager = eventHandlerManager;
@@ -48,31 +48,17 @@ public class JNetInputWorker extends Thread {
         start();
     }
 
-    /**
-     * Add received packet to inputQueue
-     *
-     * @param packet - sender which will be read
-     */
+    @Override
     public void addToQueue(Packet packet) {
         inputQueue.add(packet);
     }
 
-    /**
-     * Call event in {@link #eventHandlerManager}
-     *
-     * @param event - target event
-     */
+    @Override
     public void callEvent(IEvent event) {
         eventHandlerManager.callEvent(event);
     }
 
-    /**
-     * Packet work
-     * If packet is async (options[0]) - send to executor
-     * If packet is having feedback (options[1]) - work with it
-     *
-     * @param packet - target packet
-     */
+    @Override
     public void work(Packet packet) {
         PacketWorkEvent event = new PacketWorkEvent(packet);
         callEvent(event);
@@ -119,6 +105,7 @@ public class JNetInputWorker extends Thread {
      * Thread run implementation
      * Read {@link Packet} from inputQueue
      */
+    @Override
     public void run() {
         while (channel.channel().isOpen()) {
             try {
@@ -129,9 +116,7 @@ public class JNetInputWorker extends Thread {
         }
     }
 
-    /**
-     * Shutdown worker
-     */
+    @Override
     public void close() {
         inputQueue.clear();
         executor.shutdown();

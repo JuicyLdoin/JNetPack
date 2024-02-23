@@ -21,7 +21,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * JNet output writers queue
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class JNetOutputWorker extends Thread {
+public class JNetOutputWorker extends Thread implements IJNetOutputWorker {
 
     ChannelHandlerContext channel;
     PriorityBlockingQueue<IWriter> outputQueue;
@@ -41,20 +41,12 @@ public class JNetOutputWorker extends Thread {
         start();
     }
 
-    /**
-     * Add packet or packet group to outputQueue
-     *
-     * @param writer - sender which will be sent
-     */
+    @Override
     public void addToQueue(IWriter writer) {
         outputQueue.add(writer);
     }
 
-    /**
-     * Call event in {@link #eventHandlerManager}
-     *
-     * @param event - target event
-     */
+    @Override
     public void callEvent(IEvent event) {
         eventHandlerManager.callEvent(event);
     }
@@ -63,6 +55,7 @@ public class JNetOutputWorker extends Thread {
      * Thread run implementation
      * Send {@link IWriter} from outputQueue
      */
+    @Override
     public void run() {
         while (channel.channel().isOpen()) {
             try {
@@ -93,9 +86,7 @@ public class JNetOutputWorker extends Thread {
         }
     }
 
-    /**
-     * Shutdown worker
-     */
+    @Override
     public void close() {
         outputQueue.clear();
         interrupt();

@@ -9,6 +9,8 @@ import net.jnetpack.event.EventHandlerManager;
 import net.jnetpack.event.interfaces.IEvent;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
+import net.jnetpack.worker.IJNetInputWorker;
+import net.jnetpack.worker.IJNetOutputWorker;
 import net.jnetpack.worker.JNetInputWorker;
 import net.jnetpack.worker.JNetOutputWorker;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +26,8 @@ public class JNetServerConnection {
     @Getter
     int connectionId;
 
-    JNetOutputWorker outputWorker;
-    JNetInputWorker inputWorker;
+    IJNetOutputWorker outputWorker;
+    IJNetInputWorker inputWorker;
 
     EventHandlerManager eventHandlerManager;
 
@@ -42,6 +44,24 @@ public class JNetServerConnection {
         this.connectionId = connectionId;
         outputWorker = new JNetOutputWorker(channel, eventHandlerManager);
         inputWorker = new JNetInputWorker(channel, outputWorker, eventHandlerManager);
+    }
+
+    /**
+     * JNetServerConnection constructor
+     *
+     * @param channel             - netty channel context
+     * @param connectionId        - connection id
+     * @param eventHandlerManager - {@link EventHandlerManager JNet handler manager}
+     * @param outputWorker        - {@link IJNetOutputWorker JNet output worker}
+     * @param inputWorker         - {@link IJNetInputWorker JNet input worker}
+     */
+    public JNetServerConnection(@NotNull ChannelHandlerContext channel, int connectionId, @NotNull EventHandlerManager eventHandlerManager,
+                                @NotNull IJNetOutputWorker outputWorker, @NotNull IJNetInputWorker inputWorker) {
+        this.eventHandlerManager = eventHandlerManager;
+        this.channel = channel;
+        this.connectionId = connectionId;
+        this.outputWorker = outputWorker;
+        this.inputWorker = inputWorker;
     }
 
     /**
