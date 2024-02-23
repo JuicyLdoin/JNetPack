@@ -47,6 +47,11 @@ public class JNetOutputWorker extends Thread implements IJNetOutputWorker {
     }
 
     @Override
+    public boolean isOverloaded() {
+        return outputQueue.size() >= 50;
+    }
+
+    @Override
     public void callEvent(IEvent event) {
         eventHandlerManager.callEvent(event);
     }

@@ -54,6 +54,11 @@ public class JNetInputWorker extends Thread implements IJNetInputWorker {
     }
 
     @Override
+    public boolean isOverloaded() {
+        return inputQueue.size() >= 50;
+    }
+
+    @Override
     public void callEvent(IEvent event) {
         eventHandlerManager.callEvent(event);
     }
