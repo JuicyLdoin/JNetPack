@@ -23,6 +23,10 @@ public abstract class Packet implements IWriter, IReader {
     PacketPriority packetPriority;
     boolean[] options;
 
+    public void setAsync(boolean async) {
+        options[0] = async;
+    }
+
     public void setNeedFeedback(boolean need) {
         options[1] = need;
     }
