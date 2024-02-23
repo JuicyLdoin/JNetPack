@@ -58,11 +58,19 @@ public class JNetServerHandler extends JNetChannelHandler {
             }
 
             ChannelPipeline pipeline = ctx.pipeline();
-            pipeline.addLast(new JNetServerConnectionHandler(connection));
+            pipeline.addLast(getConnectionHandler(connection));
             pipeline.remove(this);
 
             jNetServer.callEvent(new ConnectionConnectedEvent(connection));
         } catch (JNetPacketUnregisteredException ignored) {
         }
+    }
+
+    /**
+     * @param connection - {@link JNetServerConnection JNet server connection}
+     * @return - {@link JNetServerConnectionHandler packet handler}
+     */
+    private JNetServerConnectionHandler getConnectionHandler(JNetServerConnection connection) {
+        return new JNetServerConnectionHandler(connection);
     }
 }

@@ -35,6 +35,7 @@ public class JNetServer {
     final NioEventLoopGroup workGroup;
     final Map<Integer, JNetServerConnection> connectionMap;
     Channel channel;
+    @Getter
     boolean connected;
 
     @Getter
@@ -153,6 +154,38 @@ public class JNetServer {
     }
 
     /**
+     * @return - {@link JNetServerHandler server handler which will be registered to {@link ChannelPipeline}}
+     */
+    private JNetServerHandler getServerHandler() {
+        return new JNetServerHandler(this);
+    }
+
+    /**
+     * Starts the server with netty child options
+     *
+     * @param bootstrap - {@link ServerBootstrap}
+     * @throws JNetServerAlreadyConnectedException - server already connected
+     * @throws InterruptedException                - interrupted
+     */
+    public void start(ServerBootstrap bootstrap) throws JNetServerAlreadyConnectedException, InterruptedException {
+        if (connected) {
+            throw new JNetServerAlreadyConnectedException();
+        }
+
+        bootstrap.group(connectionGroup, workGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<>() {
+                    protected void initChannel(@NotNull Channel ch) {
+                        ChannelPipeline cp = ch.pipeline();
+                        cp.addLast(getServerHandler());
+                    }
+                });
+
+        channel = bootstrap.bind(port).sync().channel();
+        connected = true;
+    }
+
+    /**
      * Starts the server
      *
      * @throws JNetServerAlreadyConnectedException - server already connected
@@ -163,14 +196,13 @@ public class JNetServer {
             throw new JNetServerAlreadyConnectedException();
         }
 
-        JNetServer jNetServer = this;
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(connectionGroup, workGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<>() {
                     protected void initChannel(@NotNull Channel ch) {
                         ChannelPipeline cp = ch.pipeline();
-                        cp.addLast(new JNetServerHandler(jNetServer));
+                        cp.addLast(getServerHandler());
                     }
                 })
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
