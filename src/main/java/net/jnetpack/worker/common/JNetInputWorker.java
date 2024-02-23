@@ -74,9 +74,8 @@ public class JNetInputWorker extends Thread implements IJNetInputWorker {
             return;
         }
 
-        boolean[] options = packet.getOptions();
-        boolean async = options[0];
-        boolean feedback = options[1];
+        boolean async = packet.isAsync();
+        boolean feedback = packet.isNeedFeedback();
         if (async) {
             CompletableFuture.runAsync(packet::work, executor)
                     .thenAccept(unused -> {

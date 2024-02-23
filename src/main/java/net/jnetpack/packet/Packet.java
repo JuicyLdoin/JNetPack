@@ -14,14 +14,23 @@ import java.util.List;
 /**
  * JNet packet
  */
-@Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Packet implements IWriter, IReader {
 
+    @Getter
     final int packetId;
+    @Getter
     PacketPriority packetPriority;
     boolean[] options;
+
+    public boolean isAsync() {
+        return options[0];
+    }
+
+    public boolean isNeedFeedback() {
+        return options[1];
+    }
 
     public void setAsync(boolean async) {
         options[0] = async;
