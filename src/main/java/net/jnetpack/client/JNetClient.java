@@ -15,8 +15,8 @@ import net.jnetpack.event.interfaces.IEventHandler;
 import net.jnetpack.exception.JNetClientAlreadyConnectedException;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
-import net.jnetpack.worker.JNetInputWorker;
-import net.jnetpack.worker.JNetOutputWorker;
+import net.jnetpack.worker.common.JNetInputWorker;
+import net.jnetpack.worker.common.JNetOutputWorker;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;

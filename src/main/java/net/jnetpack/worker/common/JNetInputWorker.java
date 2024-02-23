@@ -1,4 +1,4 @@
-package net.jnetpack.worker;
+package net.jnetpack.worker.common;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -10,6 +10,8 @@ import net.jnetpack.event.packet.PacketWorkEvent;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.PacketGroup;
 import net.jnetpack.packet.PacketPriority;
+import net.jnetpack.worker.IJNetInputWorker;
+import net.jnetpack.worker.IJNetOutputWorker;
 
 import java.util.Comparator;
 import java.util.List;

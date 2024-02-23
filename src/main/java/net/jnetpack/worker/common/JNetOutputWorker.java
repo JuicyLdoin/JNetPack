@@ -1,4 +1,4 @@
-package net.jnetpack.worker;
+package net.jnetpack.worker.common;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -12,6 +12,7 @@ import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.common.ExceptionPacket;
 import net.jnetpack.packet.interfaces.IWriter;
+import net.jnetpack.worker.IJNetOutputWorker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;

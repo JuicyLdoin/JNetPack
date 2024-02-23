@@ -11,8 +11,8 @@ import net.jnetpack.packet.Packet;
 import net.jnetpack.packet.interfaces.IWriter;
 import net.jnetpack.worker.IJNetInputWorker;
 import net.jnetpack.worker.IJNetOutputWorker;
-import net.jnetpack.worker.JNetInputWorker;
-import net.jnetpack.worker.JNetOutputWorker;
+import net.jnetpack.worker.common.JNetInputWorker;
+import net.jnetpack.worker.common.JNetOutputWorker;
 import org.jetbrains.annotations.NotNull;
 
 /**
