@@ -6,6 +6,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetChannelHandler;
 import net.jnetpack.JNetOptions;
@@ -35,6 +36,7 @@ public class JNetClient {
     JNetOutputWorker outputWorker;
     JNetInputWorker inputWorker;
     Channel channel;
+    @Getter
     boolean connected;
 
     /**
@@ -113,34 +115,73 @@ public class JNetClient {
     }
 
     /**
+     * @return - {@link JNetClientHandler client handler which will be registered to {@link ChannelPipeline}}
+     */
+    private JNetClientHandler getClientHandler() {
+        return new JNetClientHandler(this);
+    }
+
+    /**
+     * Starts the client with netty bootstrap
+     *
+     * @param bootstrap - {@link Bootstrap}
+     * @throws JNetClientAlreadyConnectedException - client already connected
+     * @throws InterruptedException                - interrupted
+     */
+    public void start(Bootstrap bootstrap) throws JNetClientAlreadyConnectedException, InterruptedException {
+        if (connected) {
+            throw new JNetClientAlreadyConnectedException();
+        }
+
+        bootstrap.group(workGroup)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<>() {
+                    protected void initChannel(@NotNull Channel ch) {
+                        JNetClient.this.initChannel(ch);
+                    }
+                });
+        channel = bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();
+        connected = true;
+    }
+
+    /**
      * Starts the client
      *
      * @throws JNetClientAlreadyConnectedException - client already connected
      * @throws InterruptedException                - interrupted
      */
     public void start() throws JNetClientAlreadyConnectedException, InterruptedException {
-        if (connected)
+        if (connected) {
             throw new JNetClientAlreadyConnectedException();
+        }
 
-        JNetClient jNetClient = this;
         Bootstrap bootstrap = new Bootstrap()
                 .group(workGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<>() {
                     protected void initChannel(@NotNull Channel ch) {
-                        ChannelPipeline cp = ch.pipeline();
-                        JNetChannelHandler handler = new JNetClientHandler(jNetClient);
-                        cp.addLast(handler);
-
-                        ChannelHandlerContext context = cp.context(handler);
-                        outputWorker = new JNetOutputWorker(context, eventHandlerManager);
-                        inputWorker = new JNetInputWorker(context, outputWorker, eventHandlerManager);
+                        JNetClient.this.initChannel(ch);
                     }
                 })
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
         channel = bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();
         connected = true;
+    }
+
+    /**
+     * Initialize netty channel
+     *
+     * @param channel - {@link Channel netty channel}
+     */
+    private void initChannel(@NotNull Channel channel) {
+        ChannelPipeline cp = channel.pipeline();
+        JNetChannelHandler handler = getClientHandler();
+        cp.addLast(handler);
+
+        ChannelHandlerContext context = cp.context(handler);
+        outputWorker = new JNetOutputWorker(context, eventHandlerManager);
+        inputWorker = new JNetInputWorker(context, outputWorker, eventHandlerManager);
     }
 
     /**
