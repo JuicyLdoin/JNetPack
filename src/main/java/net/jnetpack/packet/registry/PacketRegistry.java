@@ -1,7 +1,6 @@
 package net.jnetpack.packet.registry;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
@@ -19,7 +18,6 @@ import java.util.Map;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PacketRegistry {
 
-    @Getter
     Map<Class<? extends Packet>, Integer> idPacketMap;
     Map<Integer, Class<? extends Packet>> packetMap;
     Map<Integer, PacketPriority> priorityMap;
@@ -130,8 +128,14 @@ public class PacketRegistry {
         optionsMap.clear();
     }
 
+    /**
+     * Merge current registry with other
+     * Register all packets from other packet registry to current
+     *
+     * @param packetRegistry - target {@link PacketRegistry}
+     */
     public void merge(PacketRegistry packetRegistry) {
-        for (Map.Entry<Class<? extends Packet>, Integer> entry : packetRegistry.getIdPacketMap().entrySet()) {
+        for (Map.Entry<Class<? extends Packet>, Integer> entry : packetRegistry.idPacketMap.entrySet()) {
             int id = entry.getValue();
             register(id, packetRegistry.priorityMap.get(id), optionsMap.get(id), entry.getKey());
         }
