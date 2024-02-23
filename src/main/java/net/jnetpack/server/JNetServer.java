@@ -2,13 +2,15 @@ package net.jnetpack.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import net.jnetpack.JNetChannelHandler;
 import net.jnetpack.event.EventHandlerManager;
 import net.jnetpack.event.interfaces.IEvent;
 import net.jnetpack.event.interfaces.IEventHandler;
@@ -16,8 +18,6 @@ import net.jnetpack.exception.JNetServerAlreadyConnectedException;
 import net.jnetpack.exception.connection.JNetConnectionAlreadyExistsException;
 import net.jnetpack.exception.connection.JNetConnectionNotFoundException;
 import net.jnetpack.server.connection.JNetServerConnection;
-import net.jnetpack.worker.common.JNetInputWorker;
-import net.jnetpack.worker.common.JNetOutputWorker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
