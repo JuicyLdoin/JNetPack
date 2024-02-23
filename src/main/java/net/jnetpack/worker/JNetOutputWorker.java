@@ -60,7 +60,7 @@ public class JNetOutputWorker extends Thread implements IJNetOutputWorker {
         while (channel.channel().isOpen()) {
             try {
                 IWriter writer = outputQueue.take();
-                JNetBuffer buffer = new JNetBuffer(channel.alloc().buffer());
+                JNetBuffer buffer = JNetOptions.BUF_FUNCTION.apply(channel.alloc().buffer());
 
                 if (writer instanceof Packet packet) {
                     callEvent(new PacketWriteEvent(packet, buffer));

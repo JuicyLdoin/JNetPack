@@ -10,7 +10,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public abstract class JNetChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf buf) throws Exception {
-        read(ctx, new JNetBuffer(buf));
+        read(ctx, JNetOptions.BUF_FUNCTION.apply(buf));
     }
 
     protected abstract void read(ChannelHandlerContext ctx, JNetBuffer buf) throws Exception;
