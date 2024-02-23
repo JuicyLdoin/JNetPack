@@ -44,7 +44,7 @@ public class JNetInputWorker extends Thread implements IJNetInputWorker {
         this.outputWorker = outputWorker;
         this.eventHandlerManager = eventHandlerManager;
         executor = Executors.newFixedThreadPool(JNetOptions.WORKER_THREADS);
-        inputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(packet -> packet.getPacketPriority().getId()));
+        inputQueue = new PriorityBlockingQueue<>(JNetOptions.IO_QUEUE_SIZE, Comparator.comparingInt(packet -> packet.getPacketPriority().getId()));
         start();
     }
 
@@ -55,7 +55,7 @@ public class JNetInputWorker extends Thread implements IJNetInputWorker {
 
     @Override
     public boolean isOverloaded() {
-        return inputQueue.size() >= 50;
+        return inputQueue.size() >= JNetOptions.IO_QUEUE_SIZE;
     }
 
     @Override

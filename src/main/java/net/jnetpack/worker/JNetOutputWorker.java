@@ -37,7 +37,7 @@ public class JNetOutputWorker extends Thread implements IJNetOutputWorker {
     public JNetOutputWorker(ChannelHandlerContext channel, EventHandlerManager eventHandlerManager) {
         this.channel = channel;
         this.eventHandlerManager = eventHandlerManager;
-        outputQueue = new PriorityBlockingQueue<>(50, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
+        outputQueue = new PriorityBlockingQueue<>(JNetOptions.IO_QUEUE_SIZE, Comparator.comparingInt(writer -> writer.getPacketPriority().getId()));
         start();
     }
 
@@ -48,7 +48,7 @@ public class JNetOutputWorker extends Thread implements IJNetOutputWorker {
 
     @Override
     public boolean isOverloaded() {
-        return outputQueue.size() >= 50;
+        return outputQueue.size() >= JNetOptions.IO_QUEUE_SIZE;
     }
 
     @Override
