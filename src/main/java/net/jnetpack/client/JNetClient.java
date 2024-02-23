@@ -32,6 +32,7 @@ public class JNetClient {
     final int port;
 
     final NioEventLoopGroup workGroup;
+    @Getter
     final EventHandlerManager eventHandlerManager;
     JNetOutputWorker outputWorker;
     JNetInputWorker inputWorker;
