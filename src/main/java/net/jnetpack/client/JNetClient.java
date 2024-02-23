@@ -31,15 +31,11 @@ public class JNetClient {
     final int port;
 
     final NioEventLoopGroup workGroup;
-
+    final EventHandlerManager eventHandlerManager;
     JNetOutputWorker outputWorker;
     JNetInputWorker inputWorker;
-
     Channel channel;
-
     boolean connected;
-
-    final EventHandlerManager eventHandlerManager;
 
     /**
      * Default constructor

@@ -1,3 +1,4 @@
 package net.jnetpack.event.interfaces;
 
-public interface IEventHandler {}
+public interface IEventHandler {
+}

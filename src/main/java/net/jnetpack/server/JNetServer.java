@@ -34,12 +34,11 @@ public class JNetServer {
     final NioEventLoopGroup connectionGroup;
     final NioEventLoopGroup workGroup;
     final Map<Integer, JNetServerConnection> connectionMap;
+    @Getter
+    final EventHandlerManager eventHandlerManager;
     Channel channel;
     @Getter
     boolean connected;
-
-    @Getter
-    final EventHandlerManager eventHandlerManager;
 
     /**
      * Default constructor
@@ -161,7 +160,7 @@ public class JNetServer {
     }
 
     /**
-     * Starts the server with netty child options
+     * Starts the server with netty bootstrap
      *
      * @param bootstrap - {@link ServerBootstrap}
      * @throws JNetServerAlreadyConnectedException - server already connected
