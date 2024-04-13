@@ -61,6 +61,7 @@ publishing {
     }
     repositories {
         maven {
+            name = "Publish"
             url "https://maven.pkg.github.com/JuicyLdoin/JNetPack"
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
