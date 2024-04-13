@@ -1,4 +1,4 @@
-name: Publish Java Package
+name: Publish
 
 on:
   push:
@@ -16,10 +16,18 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
+          distribution: 'temurin'
           java-version: '16'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        
       - name: Publish Java Package
         run: |
           ./gradlew publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME_GITHUB: ${{ secrets.USERNAME_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISH }}
