@@ -16,12 +16,10 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '16'
+          java-version: '11'
 
       - name: Publish Java Package
-        uses: tactions/gradle-publish@v1
-        with:
-          gradle-version: '7.4'
-          gradle-args: 'publish'
+        run: |
+          ./gradlew publish
         env:
-          GITHUB_TOKEN: ${{ secrets.PUBLISH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
