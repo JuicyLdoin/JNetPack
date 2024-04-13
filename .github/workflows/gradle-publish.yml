@@ -1,4 +1,4 @@
-name: Publish Java Package
+name: Publish
 
 on:
   push:
