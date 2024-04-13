@@ -14,13 +14,12 @@ import java.util.List;
 /**
  * JNet packet
  */
+@Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Packet implements IWriter, IReader {
 
-    @Getter
     final int packetId;
-    @Getter
     PacketPriority packetPriority;
     boolean[] options;
 
