@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add execute permission to gradlew
-        run: chmod +x gradlew
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -21,6 +19,12 @@ jobs:
           distribution: 'temurin'
           java-version: '16'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        
       - name: Publish Java Package
         run: |
           ./gradlew publish
