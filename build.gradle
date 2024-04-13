@@ -33,18 +33,17 @@ test {
     useJUnitPlatform()
 }
 
-tasks.with {
-    withType(JavaCompile).tap {
-        configureEach {
-            options.encoding = 'UTF-8'
-            options.compilerArgs << '-Xlint:none'
-        }
-    }
-    processResources.filter { it.replace('\$version', version as String) }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:none'
+}
+
+processResources {
+    filter { it.replace('\$version', version as String) }
 }
 
 jar {
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
@@ -54,15 +53,15 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifactId = 'jnetpack' as Publication
-            version = '1.0' as Publication
+            artifactId = 'jnetpack'
+            version = '1.0'
             artifact jar
         }
     }
     repositories {
         maven {
             name = "Publish"
-            url "https://maven.pkg.github.com/JuicyLdoin/JNetPack"
+            url = uri("https://maven.pkg.github.com/JuicyLdoin/JNetPack")
             credentials {
                 username = project.hasProperty("gpr.user") ? project.gpr.user : System.getenv("GITHUB_USERNAME")
                 password = project.hasProperty("gpr.key") ? project.gpr.key : System.getenv("GITHUB_TOKEN")
