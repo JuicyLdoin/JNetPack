@@ -49,16 +49,3 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url = uri("file://${buildDir}/repo")
-        }
-    }
-}
