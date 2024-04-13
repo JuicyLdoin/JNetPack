@@ -25,14 +25,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Debug USERNAME_GITHUB and PUBLISH
+      - name: Debug USER and TOKEN
         run: |
-          echo "GITHUB_USERNAME: $USERNAME_GITHUB"
-          echo "GITHUB_TOKEN: $PUBLISH"
+          echo "USER: $USER"
+          echo "TOKEN: $TOKEN"
         
       - name: Publish Java Package
         run: |
           ./gradlew publish
         env:
-          USERNAME_GITHUB: ${{ secrets.USERNAME_GITHUB }}
-          GITHUB_TOKEN: ${{ secrets.PUBLISH }}
+          USERNAME_GITHUB: ${{ secrets.USER }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
