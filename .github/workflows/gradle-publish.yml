@@ -24,6 +24,11 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Debug GITHUB_USERNAME and GITHUB_TOKEN
+        run: |
+          echo "GITHUB_USERNAME: $GITHUB_USERNAME"
+          echo "GITHUB_TOKEN: $GITHUB_TOKEN"
         
       - name: Publish Java Package
         run: |
