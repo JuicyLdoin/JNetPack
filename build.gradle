@@ -55,7 +55,6 @@ publishing {
             from components.java
             artifactId = 'jnetpack'
             version = '1.0'
-            artifact jar
         }
     }
     repositories {
