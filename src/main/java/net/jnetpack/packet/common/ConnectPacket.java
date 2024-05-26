@@ -10,7 +10,7 @@ import net.jnetpack.packet.registry.annotation.JNetPacket;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@JNetPacket(id = 0)
+@JNetPacket(id = 0, priority = PacketPriority.HIGH, options = {true, true})
 
 @Getter
 @FieldDefaults(level = AccessLevel.PROTECTED)
