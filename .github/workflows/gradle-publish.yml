@@ -27,8 +27,8 @@ jobs:
 
       - name: Debug USER and TOKEN
         run: |
-          echo "USER: $USER"
-          echo "TOKEN: $TOKEN"
+          echo "USER: ${{ secrets.USER }}"
+          echo "TOKEN: ${{ secrets.TOKEN }}"
         
       - name: Publish Java Package
         run: |
