@@ -59,5 +59,13 @@ publishing {
                 password = System.getenv("TOKEN")
             }
         }
+        maven {
+            name = "central"
+            url = uri("https://repo1.maven.org/maven2")
+            credentials {
+                username = System.getenv("USER")
+                password = System.getenv("TOKEN")
+            }
+        }
     }
 }
