@@ -50,15 +50,6 @@ jar {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            groupId = 'net.jnetpack'
-            artifactId = 'jnetpack'
-            version = '1.0'
-        }
-    }
     repositories {
         maven {
             name = "Publish"
