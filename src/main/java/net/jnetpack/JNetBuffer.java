@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @param buf - {@link ByteBuf netty ByteBuf}
  */
+@SuppressWarnings({"unused"})
 public record JNetBuffer(ByteBuf buf) {
 
     public byte readByte() {
