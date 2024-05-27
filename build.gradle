@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'net.jnetpack'
-version = '1.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -52,7 +52,6 @@ jar {
 publishing {
     repositories {
         maven {
-            name 'Publish'
             url 'https://maven.pkg.github.com/JuicyLdoin/JNetPack'
             credentials {
                 username System.getenv("USER")
@@ -67,7 +66,7 @@ publishing {
 
             groupId 'net.jnetpack'
             artifactId 'jnetpack'
-            version '1.0'
+            version project.version
         }
     }
 }
