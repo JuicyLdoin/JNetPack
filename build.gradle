@@ -50,22 +50,13 @@ jar {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "Publish"
-            url = uri("https://maven.pkg.github.com/JuicyLdoin/JNetPack")
-            credentials {
-                username = System.getenv("USER")
-                password = System.getenv("TOKEN")
-            }
-        }
-        maven {
-            name = "central"
-            url = uri("https://repo1.maven.org/maven2")
-            credentials {
-                username = System.getenv("USER")
-                password = System.getenv("TOKEN")
-            }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = 'net.jnetpack'
+            artifactId = 'jnetpack'
+            version = '1.0'
         }
     }
 }
