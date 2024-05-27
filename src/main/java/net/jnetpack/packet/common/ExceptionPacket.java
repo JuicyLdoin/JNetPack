@@ -3,7 +3,7 @@ package net.jnetpack.packet.common;
 import net.jnetpack.packet.PacketPriority;
 import net.jnetpack.packet.registry.annotation.JNetPacket;
 
-@JNetPacket(id = -1, priority = PacketPriority.HIGH)
+@JNetPacket(id = -1, priority = PacketPriority.HIGH, options = {true, true})
 public class ExceptionPacket extends MessagePacket {
 
     public ExceptionPacket(int packetId, PacketPriority packetPriority, boolean[] options) {
