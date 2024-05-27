@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'net.jnetpack'
-version = '1.0.1'
+version = '1.0.2-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -56,6 +56,14 @@ publishing {
             credentials {
                 username System.getenv("USER")
                 password System.getenv("TOKEN")
+            }
+        }
+        maven {
+            name = "central"
+            url = uri("https://repo1.maven.org/maven2")
+            credentials {
+                username = System.getenv("USER")
+                password = System.getenv("TOKEN")
             }
         }
     }
