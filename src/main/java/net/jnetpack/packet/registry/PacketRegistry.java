@@ -1,6 +1,7 @@
 package net.jnetpack.packet.registry;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.exception.registry.JNetPacketUnregisteredException;
 import net.jnetpack.packet.Packet;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * JNet packet registry which contains a packet ids and classes
  */
+@Getter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PacketRegistry {
 
