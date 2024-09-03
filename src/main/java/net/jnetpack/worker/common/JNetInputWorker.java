@@ -104,7 +104,7 @@ public class JNetInputWorker extends Thread implements IJNetInputWorker {
         }
 
         feedback.forEach(packet1 -> packet1.setNeedFeedback(false));
-        outputWorker.addToQueue(new PacketGroup(PacketPriority.HIGH, JNetOptions.PACKET_REGISTRY, feedback));
+        outputWorker.addToQueue(new PacketGroup(PacketPriority.HIGH, feedback));
     }
 
     /**

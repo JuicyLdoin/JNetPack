@@ -13,10 +13,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public enum PacketPriority {
 
-    HIGH((byte) 0),
-    MEDIUM((byte) 1),
-    LOW((byte) 2);
+    HIGH(0),
+    MEDIUM(1),
+    LOW(2);
 
-    byte id;
+    int id;
 
 }

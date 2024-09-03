@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.jnetpack.JNetBuffer;
 import net.jnetpack.packet.interfaces.IWriter;
-import net.jnetpack.packet.registry.PacketRegistry;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,41 +24,38 @@ public class PacketGroup implements IWriter {
     /**
      * Default constructor
      */
-    public PacketGroup(PacketRegistry packetRegistry) {
-        this(packetRegistry, PacketPriority.MEDIUM);
+    public PacketGroup() {
+        this(PacketPriority.MEDIUM);
     }
 
     /**
      * Constructor with {@link PacketPriority}
      *
-     * @param packetRegistry - JNet {@link PacketRegistry}
      * @param packetPriority - the priority that will be used to send the group
      */
-    public PacketGroup(PacketRegistry packetRegistry, PacketPriority packetPriority) {
+    public PacketGroup(PacketPriority packetPriority) {
         this.packetPriority = packetPriority;
-        queue = new PriorityQueue<>(Comparator.comparing(packet -> packetRegistry.getId(packet.getClass())));
+        queue = new PriorityQueue<>(Comparator.comparing(packet -> packet.getPacketPriority().getId()));
     }
 
     /**
      * Constructor with {@link PacketPriority} and {@link Packet JNet packets} array
      *
      * @param packetPriority - the priority that will be used to send the group
-     * @param packetRegistry - JNet {@link PacketRegistry}
      * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
      */
-    public PacketGroup(PacketPriority packetPriority, PacketRegistry packetRegistry, Packet... packets) {
-        this(packetPriority, packetRegistry, Arrays.asList(packets));
+    public PacketGroup(PacketPriority packetPriority, Packet... packets) {
+        this(packetPriority, Arrays.asList(packets));
     }
 
     /**
      * Constructor with {@link PacketPriority} and {@link Packet JNet packets} array
      *
      * @param packetPriority - the priority that will be used to send the group
-     * @param packetRegistry - JNet {@link PacketRegistry}
      * @param packets        - array of {@link Packet JNet packets} which will be added instantly to queue
      */
-    public PacketGroup(PacketPriority packetPriority, PacketRegistry packetRegistry, List<Packet> packets) {
-        this(packetRegistry, packetPriority);
+    public PacketGroup(PacketPriority packetPriority, List<Packet> packets) {
+        this(packetPriority);
         queue.addAll(packets);
     }
 
