@@ -139,7 +139,7 @@ public class PacketRegistry {
     public void merge(PacketRegistry packetRegistry) {
         for (Map.Entry<Class<? extends Packet>, Integer> entry : packetRegistry.idPacketMap.entrySet()) {
             int id = entry.getValue();
-            register(id, packetRegistry.priorityMap.get(id), optionsMap.get(id), entry.getKey());
+            register(id, packetRegistry.priorityMap.get(id), packetRegistry.optionsMap.get(id), entry.getKey());
         }
     }
 }
