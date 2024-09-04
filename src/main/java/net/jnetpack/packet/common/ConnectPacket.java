@@ -18,8 +18,8 @@ public class ConnectPacket extends Packet {
 
     int id;
 
-    public ConnectPacket(int packetId, PacketPriority packetPriority, boolean[] options) {
-        super(packetId, packetPriority, options);
+    public ConnectPacket(int id) {
+        this.id = id;
     }
 
     @Override
